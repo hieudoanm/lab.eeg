@@ -1,0 +1,23 @@
+/* TEAM */
+Team: EEG Lab Contributors
+Site: https://eeg-lab.example.com
+GitHub: https://github.com/eeg-lab/eeg-lab
+
+/* TECHNOLOGY */
+Stack: Next.js 16, React 19, TypeScript 5, Tailwind CSS 4
+API: FastAPI, Python 3.12, PostgreSQL 16, Redis 7
+Charts: Plotly.js, WebGL
+Auth: JWT (HS256/RS256), tRPC
+Testing: Vitest, Playwright, pytest
+CI/CD: GitHub Actions, Docker, Terraform
+
+/* STANDARDS */
+HTML5, CSS3, ES2024
+Web App Manifest, Service Worker
+Open Graph, Twitter Cards
+JSON-LD Structured Data
+Accessibility: WCAG 2.1 AA
+
+/* CONTACT */
+Security: security@eeg-lab.example.com
+Email: hello@eeg-lab.example.com

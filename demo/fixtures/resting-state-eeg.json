@@ -1,0 +1,17 @@
+{
+  "sampling_frequency_hz": 256.0,
+  "channel_names": [
+    "EEG 001",
+    "EEG 002",
+    "EEG 003",
+    "EEG 004"
+  ],
+  "channel_units": [
+    "uV",
+    "uV",
+    "uV",
+    "uV"
+  ],
+  "pattern": "mixed",
+  "seed": 20261010
+}

@@ -1,0 +1,4386 @@
+openapi: 3.1.0
+info:
+  title: EEG Lab API
+  description: REST API for organising neuroscience studies, EEG recordings, and reproducible descriptive
+    analyses. Research software demonstration only.
+  version: 0.1.0
+paths:
+  /health/live:
+    get:
+      tags:
+      - health
+      summary: Liveness probe
+      description: Reports whether the API process is alive. Never checks dependencies.
+      operationId: live_health_live_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthLiveResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      parameters: []
+  /health/ready:
+    get:
+      tags:
+      - health
+      summary: Readiness probe
+      description: Reports whether required dependencies are available. Exposes no secrets.
+      operationId: ready_health_ready_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthReadyResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: The database is unavailable; the API is not ready to serve traffic.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthReadyResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      parameters: []
+  /api/v1/auth/token:
+    post:
+      tags:
+      - authentication
+      summary: Issue a development access token
+      description: Mints a short-lived bearer token for local development and tests, and sets an HttpOnly
+        session cookie for browser clients. The endpoint is disabled whenever AUTH_MODE is not 'development'
+        and never serves production traffic.
+      operationId: issue_development_token_api_v1_auth_token_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevelopmentTokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenResponse'
+          headers:
+            Set-Cookie:
+              $ref: '#/components/headers/SetCookie'
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: Development token issuance is disabled.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      parameters: []
+  /api/v1/auth/logout:
+    post:
+      tags:
+      - authentication
+      summary: Clear the session cookie
+      description: Expires the browser session cookie. Always reports success.
+      operationId: logout_api_v1_auth_logout_post
+      responses:
+        '204':
+          description: Successful Response
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      parameters: []
+  /api/v1/me:
+    get:
+      tags:
+      - identity
+      summary: Describe the authenticated user
+      description: Returns the caller's profile and organisation memberships. Provider internals and access
+        tokens are never included.
+      operationId: read_current_user_api_v1_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUserResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+      parameters: []
+  /api/v1/organisations:
+    get:
+      tags:
+      - organisations
+      summary: List organisations accessible to the caller
+      operationId: list_organisations_api_v1_organisations_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationListResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+      parameters: []
+    post:
+      tags:
+      - organisations
+      summary: Create an organisation and make the caller an owner
+      operationId: create_organisation_api_v1_organisations_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganisationCreateRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationDetailResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+      parameters: []
+  /api/v1/organisations/{organisation_id}:
+    get:
+      tags:
+      - organisations
+      summary: Read an organisation the caller belongs to
+      operationId: read_organisation_api_v1_organisations__organisation_id__get
+      parameters:
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationDetailResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/summary:
+    get:
+      tags:
+      - summary
+      summary: Read organisation dashboard counts
+      operationId: read_organisation_summary_api_v1_organisations__organisation_id__summary_get
+      parameters:
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganisationSummaryRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+  /api/v1/organisations/{organisation_id}/memberships:
+    get:
+      tags:
+      - organisations
+      summary: List organisation members
+      operationId: list_memberships_api_v1_organisations__organisation_id__memberships_get
+      parameters:
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipListResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+    post:
+      tags:
+      - organisations
+      summary: Add an organisation member (owner only)
+      operationId: add_membership_api_v1_organisations__organisation_id__memberships_post
+      parameters:
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MembershipCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/memberships/{membership_id}:
+    patch:
+      tags:
+      - organisations
+      summary: Change a member's role (owner only)
+      operationId: change_membership_role_api_v1_organisations__organisation_id__memberships__membership_id__patch
+      parameters:
+      - name: membership_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Membership Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MembershipRoleUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+    delete:
+      tags:
+      - organisations
+      summary: Remove an organisation member (owner only)
+      operationId: remove_membership_api_v1_organisations__organisation_id__memberships__membership_id__delete
+      parameters:
+      - name: membership_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Membership Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '204':
+          description: Successful Response
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/studies:
+    post:
+      tags:
+      - studies
+      summary: Create a study
+      operationId: create_study_api_v1_organisations__organisation_id__studies_post
+      parameters:
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+    get:
+      tags:
+      - studies
+      summary: List studies
+      operationId: list_studies_api_v1_organisations__organisation_id__studies_get
+      parameters:
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cursor
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Search
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/StudyStatus'
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyListResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/studies/{study_id}:
+    get:
+      tags:
+      - studies
+      summary: Read a study
+      operationId: read_study_api_v1_organisations__organisation_id__studies__study_id__get
+      parameters:
+      - name: study_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Study Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+    patch:
+      tags:
+      - studies
+      summary: Update a study
+      operationId: update_study_api_v1_organisations__organisation_id__studies__study_id__patch
+      parameters:
+      - name: study_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Study Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/studies/{study_id}/archive:
+    post:
+      tags:
+      - studies
+      summary: Archive a study
+      operationId: archive_study_api_v1_organisations__organisation_id__studies__study_id__archive_post
+      parameters:
+      - name: study_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Study Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyArchiveResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/studies/{study_id}/datasets:
+    post:
+      tags:
+      - datasets
+      summary: Register dataset metadata before upload
+      operationId: register_dataset_api_v1_organisations__organisation_id__studies__study_id__datasets_post
+      parameters:
+      - name: study_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Study Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasetCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+    get:
+      tags:
+      - datasets
+      summary: List datasets within a study
+      operationId: list_datasets_api_v1_organisations__organisation_id__studies__study_id__datasets_get
+      parameters:
+      - name: study_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Study Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cursor
+      - name: limit
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetListResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/datasets/{dataset_id}:
+    get:
+      tags:
+      - datasets
+      summary: Read dataset metadata
+      operationId: read_dataset_api_v1_organisations__organisation_id__datasets__dataset_id__get
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Dataset Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/datasets/{dataset_id}/signals:
+    get:
+      tags:
+      - signals
+      summary: Read a bounded window of a dataset's recording for display
+      operationId: read_signal_window_api_v1_organisations__organisation_id__datasets__dataset_id__signals_get
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Dataset Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      - name: start_seconds
+        in: query
+        required: false
+        schema:
+          type: number
+          minimum: 0.0
+          default: 0.0
+          title: Start Seconds
+      - name: end_seconds
+        in: query
+        required: true
+        schema:
+          type: number
+          exclusiveMinimum: 0.0
+          title: End Seconds
+      - name: channels
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Channels
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignalWindowRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+  /api/v1/organisations/{organisation_id}/datasets/{dataset_id}/upload-sessions:
+    post:
+      tags:
+      - uploads
+      summary: Create an upload session for a dataset
+      operationId: create_upload_session_api_v1_organisations__organisation_id__datasets__dataset_id__upload_sessions_post
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Dataset Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadSessionCreateRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadSessionRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/datasets/{dataset_id}/upload-sessions/{session_id}/content:
+    put:
+      tags:
+      - uploads
+      summary: Store the recording bytes for an upload session
+      operationId: store_upload_content_api_v1_organisations__organisation_id__datasets__dataset_id__upload_sessions__session_id__content_put
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Dataset Id
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '204':
+          description: Recording content stored successfully.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+      requestBody:
+        required: true
+        description: Raw recording bytes, limited by the configured maximum upload size.
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+  /api/v1/organisations/{organisation_id}/datasets/{dataset_id}/upload-sessions/{session_id}/finalise:
+    post:
+      tags:
+      - uploads
+      summary: Finalise and validate a recording upload
+      operationId: finalise_upload_api_v1_organisations__organisation_id__datasets__dataset_id__upload_sessions__session_id__finalise_post
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Dataset Id
+      - name: session_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Session Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadFinaliseResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/datasets/{dataset_id}/analyses:
+    post:
+      tags:
+      - analyses
+      summary: Submit an analysis for asynchronous execution
+      operationId: submit_analysis_api_v1_organisations__organisation_id__datasets__dataset_id__analyses_post
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Dataset Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+          title: Idempotency-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalysisSubmitRequest'
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJobRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+    get:
+      tags:
+      - analyses
+      summary: List a dataset's analyses
+      operationId: list_analyses_api_v1_organisations__organisation_id__datasets__dataset_id__analyses_get
+      parameters:
+      - name: dataset_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Dataset Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cursor
+      - name: limit
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisListResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/analyses:
+    get:
+      tags:
+      - analyses
+      summary: List an organisation's analyses
+      operationId: list_organisation_analyses_api_v1_organisations__organisation_id__analyses_get
+      parameters:
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      - name: cursor
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cursor
+      - name: limit
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          title: Limit
+      - name: dataset_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Dataset Id
+      - name: study_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Study Id
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/AnalysisJobStatus'
+          - type: 'null'
+          title: Status
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisListResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+  /api/v1/organisations/{organisation_id}/analyses/{analysis_id}:
+    get:
+      tags:
+      - analyses
+      summary: Read an analysis job's status
+      operationId: read_analysis_api_v1_organisations__organisation_id__analyses__analysis_id__get
+      parameters:
+      - name: analysis_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Analysis Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJobRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/analyses/{analysis_id}/results:
+    get:
+      tags:
+      - analyses
+      summary: Retrieve a successful analysis result
+      operationId: read_analysis_result_api_v1_organisations__organisation_id__analyses__analysis_id__results_get
+      parameters:
+      - name: analysis_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Analysis Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisResultRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /api/v1/organisations/{organisation_id}/analyses/{analysis_id}/cancel:
+    post:
+      tags:
+      - analyses
+      summary: Request cancellation of a queued analysis
+      operationId: cancel_analysis_api_v1_organisations__organisation_id__analyses__analysis_id__cancel_post
+      parameters:
+      - name: analysis_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Analysis Id
+      - name: organisation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Organisation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalysisJobRead'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '422':
+          description: Request validation failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '401':
+          description: Missing or invalid authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+            WWW-Authenticate:
+              $ref: '#/components/headers/WwwAuthenticate'
+        '403':
+          description: The authenticated caller lacks permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '404':
+          description: The resource does not exist or is not accessible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '409':
+          description: The request conflicts with the resource state or idempotency key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '503':
+          description: A required dependency is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+      security:
+      - BearerAuth: []
+      - SessionCookieAuth: []
+  /metrics:
+    get:
+      tags:
+      - observability
+      summary: Expose Prometheus metrics
+      description: Unauthenticated Prometheus exposition endpoint; restrict access to trusted monitoring
+        networks.
+      operationId: read_prometheus_metrics
+      responses:
+        '200':
+          description: Prometheus metrics in the text exposition format.
+          content:
+            text/plain:
+              schema:
+                type: string
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: The request could not be completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+    head:
+      tags:
+      - observability
+      summary: Check Prometheus metrics endpoint
+      description: Unauthenticated HEAD request for the metrics endpoint; restrict access to trusted monitoring
+        networks.
+      operationId: head_prometheus_metrics
+      responses:
+        '200':
+          description: Metrics endpoint is available.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '413':
+          description: The request body exceeds the configured size limit.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+        '500':
+          description: Unexpected server failure.
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/RequestId'
+components:
+  schemas:
+    AccessTokenResponse:
+      properties:
+        access_token:
+          type: string
+          title: Access Token
+        token_type:
+          type: string
+          const: Bearer
+          title: Token Type
+          default: Bearer
+        expires_at:
+          type: string
+          title: Expires At
+      type: object
+      required:
+      - access_token
+      - expires_at
+      title: AccessTokenResponse
+    AnalysisError:
+      properties:
+        code:
+          type: string
+          title: Code
+        message:
+          type: string
+          title: Message
+      additionalProperties: false
+      type: object
+      required:
+      - code
+      - message
+      title: AnalysisError
+      description: A safe, classified job failure.
+    AnalysisJobRead:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        dataset_id:
+          type: string
+          format: uuid
+          title: Dataset Id
+        analysis_type:
+          $ref: '#/components/schemas/AnalysisType'
+        algorithm_version:
+          type: string
+          title: Algorithm Version
+        status:
+          $ref: '#/components/schemas/AnalysisJobStatus'
+        attempt_count:
+          type: integer
+          title: Attempt Count
+        max_attempts:
+          type: integer
+          title: Max Attempts
+        requested_at:
+          type: string
+          title: Requested At
+        started_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Started At
+        completed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Completed At
+        error:
+          anyOf:
+          - $ref: '#/components/schemas/AnalysisError'
+          - type: 'null'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - dataset_id
+      - analysis_type
+      - algorithm_version
+      - status
+      - attempt_count
+      - max_attempts
+      - requested_at
+      title: AnalysisJobRead
+      description: Current state of an analysis job.
+    AnalysisJobStatus:
+      type: string
+      enum:
+      - queued
+      - running
+      - succeeded
+      - failed
+      - cancelled
+      title: AnalysisJobStatus
+      description: Durable analysis job lifecycle.
+    AnalysisListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/AnalysisJobRead'
+          type: array
+          title: Items
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+      type: object
+      required:
+      - items
+      title: AnalysisListResponse
+      description: Paginated list of a dataset's analyses.
+    AnalysisProvenance:
+      properties:
+        input_checksum_sha256:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Input Checksum Sha256
+        sampling_frequency_hz:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sampling Frequency Hz
+        channel_count:
+          type: integer
+          title: Channel Count
+        sample_count:
+          type: integer
+          title: Sample Count
+        parameters:
+          $ref: '#/components/schemas/DescriptiveStatisticsParameters'
+      additionalProperties: false
+      type: object
+      required:
+      - channel_count
+      - sample_count
+      - parameters
+      title: AnalysisProvenance
+      description: Reproducibility metadata stored with every result.
+    AnalysisResultRead:
+      properties:
+        analysis_id:
+          type: string
+          format: uuid
+          title: Analysis Id
+        dataset_id:
+          type: string
+          format: uuid
+          title: Dataset Id
+        algorithm_version:
+          type: string
+          title: Algorithm Version
+        result_schema_version:
+          type: string
+          title: Result Schema Version
+        created_at:
+          type: string
+          title: Created At
+        channels:
+          items:
+            $ref: '#/components/schemas/ChannelStatisticsRead'
+          type: array
+          title: Channels
+        provenance:
+          $ref: '#/components/schemas/AnalysisProvenance'
+      additionalProperties: false
+      type: object
+      required:
+      - analysis_id
+      - dataset_id
+      - algorithm_version
+      - result_schema_version
+      - created_at
+      - channels
+      - provenance
+      title: AnalysisResultRead
+      description: A successful analysis result and its provenance.
+    AnalysisSubmitRequest:
+      properties:
+        analysis_type:
+          $ref: '#/components/schemas/AnalysisType'
+          default: descriptive_statistics
+        algorithm_version:
+          type: string
+          maxLength: 50
+          minLength: 1
+          title: Algorithm Version
+          default: 1.0.0
+        parameters:
+          $ref: '#/components/schemas/DescriptiveStatisticsParameters'
+      additionalProperties: false
+      type: object
+      title: AnalysisSubmitRequest
+      description: Submit an analysis for asynchronous execution.
+    AnalysisType:
+      type: string
+      enum:
+      - descriptive_statistics
+      title: AnalysisType
+      description: Supported analysis identifiers.
+    ChannelStatisticsRead:
+      properties:
+        channel_index:
+          type: integer
+          title: Channel Index
+        channel_name:
+          type: string
+          title: Channel Name
+        unit:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Unit
+        mean:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Mean
+        standard_deviation:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Standard Deviation
+        minimum:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Minimum
+        maximum:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Maximum
+        peak_to_peak:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Peak To Peak
+        valid_sample_count:
+          type: integer
+          title: Valid Sample Count
+      additionalProperties: false
+      type: object
+      required:
+      - channel_index
+      - channel_name
+      - valid_sample_count
+      title: ChannelStatisticsRead
+      description: Descriptive statistics for one channel; disabled metrics are omitted.
+    CurrentUserResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        memberships:
+          items:
+            $ref: '#/components/schemas/MembershipSummary'
+          type: array
+          title: Memberships
+      type: object
+      required:
+      - id
+      - display_name
+      - email
+      - memberships
+      title: CurrentUserResponse
+    DatasetCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Description
+        format:
+          $ref: '#/components/schemas/DatasetFormat'
+          default: npy
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+        source_description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Source Description
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: DatasetCreateRequest
+      description: Register a dataset before upload.
+    DatasetFormat:
+      type: string
+      enum:
+      - npy
+      title: DatasetFormat
+      description: Supported recording formats.
+    DatasetListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/DatasetRead'
+          type: array
+          title: Items
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+      type: object
+      required:
+      - items
+      title: DatasetListResponse
+      description: Paginated list of datasets within a study.
+    DatasetRead:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        study_id:
+          type: string
+          format: uuid
+          title: Study Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        format:
+          $ref: '#/components/schemas/DatasetFormat'
+        status:
+          $ref: '#/components/schemas/DatasetStatus'
+        sampling_frequency_hz:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sampling Frequency Hz
+        channel_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Channel Count
+        sample_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Sample Count
+        duration_seconds:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Duration Seconds
+        channel_names:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Channel Names
+        channel_units:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Channel Units
+        checksum_sha256:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Checksum Sha256
+        file_size_bytes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: File Size Bytes
+        source_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Description
+        created_at:
+          type: string
+          title: Created At
+        updated_at:
+          type: string
+          title: Updated At
+        validated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Validated At
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - study_id
+      - name
+      - description
+      - format
+      - status
+      - created_at
+      - updated_at
+      title: DatasetRead
+      description: Dataset metadata returned to API clients.
+    DatasetStatus:
+      type: string
+      enum:
+      - pending_upload
+      - validating
+      - ready
+      - rejected
+      - failed
+      - archived
+      title: DatasetStatus
+      description: Upload and validation lifecycle for a dataset.
+    DescriptiveStatisticsParameters:
+      properties:
+        include_mean:
+          type: boolean
+          title: Include Mean
+          default: true
+        include_standard_deviation:
+          type: boolean
+          title: Include Standard Deviation
+          default: true
+        include_min_max:
+          type: boolean
+          title: Include Min Max
+          default: true
+        include_peak_to_peak:
+          type: boolean
+          title: Include Peak To Peak
+          default: true
+      additionalProperties: false
+      type: object
+      title: DescriptiveStatisticsParameters
+      description: Which descriptive metrics to compute for each channel.
+    DevelopmentTokenRequest:
+      properties:
+        subject:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Subject
+        identity_provider:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Identity Provider
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Display Name
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
+      additionalProperties: false
+      type: object
+      title: DevelopmentTokenRequest
+      description: Optional overrides for the development token subject.
+    HealthLiveResponse:
+      properties:
+        status:
+          type: string
+          const: alive
+          title: Status
+          default: alive
+        service:
+          type: string
+          title: Service
+        version:
+          type: string
+          title: Version
+        environment:
+          type: string
+          title: Environment
+      type: object
+      required:
+      - service
+      - version
+      - environment
+      title: HealthLiveResponse
+    HealthReadyResponse:
+      properties:
+        status:
+          type: string
+          enum:
+          - ready
+          - unavailable
+          title: Status
+        service:
+          type: string
+          title: Service
+        version:
+          type: string
+          title: Version
+        checks:
+          additionalProperties:
+            type: string
+          type: object
+          title: Checks
+      type: object
+      required:
+      - status
+      - service
+      - version
+      title: HealthReadyResponse
+    MembershipCreateRequest:
+      properties:
+        identity_provider:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Identity Provider
+        subject:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Subject
+        role:
+          $ref: '#/components/schemas/Role'
+        display_name:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Display Name
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
+      additionalProperties: false
+      type: object
+      required:
+      - identity_provider
+      - subject
+      - role
+      title: MembershipCreateRequest
+    MembershipListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/MembershipRead'
+          type: array
+          title: Items
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+      type: object
+      required:
+      - items
+      title: MembershipListResponse
+    MembershipRead:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        user_id:
+          type: string
+          format: uuid
+          title: User Id
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        role:
+          $ref: '#/components/schemas/Role'
+        created_at:
+          type: string
+          title: Created At
+        updated_at:
+          type: string
+          title: Updated At
+      type: object
+      required:
+      - id
+      - user_id
+      - display_name
+      - email
+      - role
+      - created_at
+      - updated_at
+      title: MembershipRead
+    MembershipRoleUpdateRequest:
+      properties:
+        role:
+          $ref: '#/components/schemas/Role'
+      additionalProperties: false
+      type: object
+      required:
+      - role
+      title: MembershipRoleUpdateRequest
+    MembershipSummary:
+      properties:
+        membership_id:
+          type: string
+          format: uuid
+          title: Membership Id
+        organisation_id:
+          type: string
+          format: uuid
+          title: Organisation Id
+        organisation_name:
+          type: string
+          title: Organisation Name
+        role:
+          $ref: '#/components/schemas/Role'
+      type: object
+      required:
+      - membership_id
+      - organisation_id
+      - organisation_name
+      - role
+      title: MembershipSummary
+    OrganisationCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Name
+        slug:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Slug
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: OrganisationCreateRequest
+      description: Request to create a new organisation.
+    OrganisationDetailResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slug
+        status:
+          type: string
+          title: Status
+        role:
+          $ref: '#/components/schemas/Role'
+        created_at:
+          type: string
+          title: Created At
+        updated_at:
+          type: string
+          title: Updated At
+      type: object
+      required:
+      - id
+      - name
+      - slug
+      - status
+      - role
+      - created_at
+      - updated_at
+      title: OrganisationDetailResponse
+    OrganisationListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/OrganisationSummary'
+          type: array
+          title: Items
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+      type: object
+      required:
+      - items
+      title: OrganisationListResponse
+    OrganisationSummary:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slug
+        status:
+          type: string
+          title: Status
+        role:
+          $ref: '#/components/schemas/Role'
+      type: object
+      required:
+      - id
+      - name
+      - slug
+      - status
+      - role
+      title: OrganisationSummary
+    Role:
+      type: string
+      enum:
+      - owner
+      - researcher
+      - viewer
+      title: Role
+      description: Organisation membership roles.
+    StudyArchiveResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        status:
+          $ref: '#/components/schemas/StudyStatus'
+        archived_at:
+          type: string
+          title: Archived At
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - status
+      - archived_at
+      title: StudyArchiveResponse
+      description: Response returned after archiving a study.
+    StudyCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Description
+      additionalProperties: false
+      type: object
+      required:
+      - name
+      title: StudyCreateRequest
+      description: Request to create a study.
+    StudyListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/StudyRead'
+          type: array
+          title: Items
+        next_cursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Cursor
+        has_more:
+          type: boolean
+          title: Has More
+          default: false
+      type: object
+      required:
+      - items
+      title: StudyListResponse
+      description: Paginated list of studies.
+    StudyRead:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        status:
+          $ref: '#/components/schemas/StudyStatus'
+        created_at:
+          type: string
+          title: Created At
+        updated_at:
+          type: string
+          title: Updated At
+        archived_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Archived At
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - name
+      - description
+      - status
+      - created_at
+      - updated_at
+      title: StudyRead
+      description: Study representation returned to API clients.
+    StudyStatus:
+      type: string
+      enum:
+      - active
+      - archived
+      title: StudyStatus
+      description: Lifecycle states for a study.
+    StudyUpdateRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Name
+        description:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Description
+      additionalProperties: false
+      type: object
+      title: StudyUpdateRequest
+      description: Partial update of a study.
+    UploadFinaliseResponse:
+      properties:
+        upload_session_id:
+          type: string
+          format: uuid
+          title: Upload Session Id
+        upload_method:
+          type: string
+          const: backend
+          title: Upload Method
+          default: backend
+        dataset:
+          $ref: '#/components/schemas/DatasetRead'
+        status:
+          $ref: '#/components/schemas/UploadSessionStatus'
+      additionalProperties: false
+      type: object
+      required:
+      - upload_session_id
+      - dataset
+      - status
+      title: UploadFinaliseResponse
+      description: 'Result of a finalisation request.
+
+
+        Validation runs synchronously in Phase 5 (the background worker arrives in
+
+        Phase 6), so the dataset is returned in its final state.'
+    UploadManifest:
+      properties:
+        sampling_frequency_hz:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Sampling Frequency Hz
+        channel_names:
+          items:
+            type: string
+          type: array
+          maxItems: 256
+          minItems: 1
+          title: Channel Names
+        channel_units:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 256
+          - type: 'null'
+          title: Channel Units
+      additionalProperties: false
+      type: object
+      required:
+      - sampling_frequency_hz
+      - channel_names
+      title: UploadManifest
+      description: 'Metadata supplied with the recording and verified against the array.
+
+
+        The ``.npy`` array embeds no sampling frequency or channel labels, so the
+
+        manifest is the authoritative source for these values; validation rejects a
+
+        manifest that does not match the array''s first dimension.'
+    UploadSessionCreateRequest:
+      properties:
+        file_name:
+          type: string
+          maxLength: 255
+          minLength: 1
+          title: File Name
+        file_size_bytes:
+          type: integer
+          minimum: 1.0
+          title: File Size Bytes
+        format:
+          $ref: '#/components/schemas/DatasetFormat'
+          default: npy
+        expected_checksum_sha256:
+          anyOf:
+          - type: string
+            maxLength: 64
+            minLength: 64
+          - type: 'null'
+          title: Expected Checksum Sha256
+        manifest:
+          $ref: '#/components/schemas/UploadManifest'
+      additionalProperties: false
+      type: object
+      required:
+      - file_name
+      - file_size_bytes
+      - manifest
+      title: UploadSessionCreateRequest
+      description: Create an upload session for a registered dataset.
+    UploadSessionRead:
+      properties:
+        upload_session_id:
+          type: string
+          format: uuid
+          title: Upload Session Id
+        status:
+          $ref: '#/components/schemas/UploadSessionStatus'
+        upload_method:
+          type: string
+          enum:
+          - backend
+        upload_url:
+          type: string
+          title: Upload Url
+        expires_at:
+          type: string
+          title: Expires At
+      additionalProperties: false
+      type: object
+      required:
+      - upload_session_id
+      - status
+      - upload_method
+      - upload_url
+      - expires_at
+      title: UploadSessionRead
+      description: 'An upload session handed to the client.
+
+
+        For the local ``backend`` method, ``upload_url`` is a relative path on the
+
+        same API host; the caller authenticates as it does for any other request.'
+    UploadSessionStatus:
+      type: string
+      enum:
+      - created
+      - uploading
+      - uploaded
+      - finalising
+      - completed
+      - failed
+      - expired
+      title: UploadSessionStatus
+      description: Lifecycle states for an upload session.
+    ErrorDetailModel:
+      type: object
+      properties:
+        field:
+          anyOf:
+          - type: string
+          - type: 'null'
+        code:
+          type: string
+        message:
+          type: string
+      required:
+      - code
+      - message
+      title: ErrorDetailModel
+    ErrorBody:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Stable machine-readable error code
+        message:
+          type: string
+          description: Human-readable message safe for display
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetailModel'
+        request_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+      required:
+      - code
+      - message
+      - details
+      title: ErrorBody
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorBody'
+      required:
+      - error
+      title: ErrorResponse
+    AnalysesByStatus:
+      properties:
+        queued:
+          type: integer
+          title: Queued
+          default: 0
+        running:
+          type: integer
+          title: Running
+          default: 0
+        succeeded:
+          type: integer
+          title: Succeeded
+          default: 0
+        failed:
+          type: integer
+          title: Failed
+          default: 0
+        cancelled:
+          type: integer
+          title: Cancelled
+          default: 0
+      additionalProperties: false
+      type: object
+      title: AnalysesByStatus
+      description: Analysis job counts grouped by lifecycle status.
+    OrganisationSummaryRead:
+      properties:
+        study_count:
+          type: integer
+          title: Study Count
+        active_study_count:
+          type: integer
+          title: Active Study Count
+        dataset_count:
+          type: integer
+          title: Dataset Count
+        ready_dataset_count:
+          type: integer
+          title: Ready Dataset Count
+        analysis_count:
+          type: integer
+          title: Analysis Count
+        analyses_by_status:
+          $ref: '#/components/schemas/AnalysesByStatus'
+      additionalProperties: false
+      type: object
+      required:
+      - study_count
+      - active_study_count
+      - dataset_count
+      - ready_dataset_count
+      - analysis_count
+      - analyses_by_status
+      title: OrganisationSummaryRead
+      description: Aggregate counts for an organisation's dashboard.
+    SignalChannelRead:
+      properties:
+        channel_index:
+          type: integer
+          title: Channel Index
+        channel_name:
+          type: string
+          title: Channel Name
+        unit:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Unit
+        samples:
+          items:
+            anyOf:
+            - type: number
+            - type: 'null'
+          type: array
+          title: Samples
+      additionalProperties: false
+      type: object
+      required:
+      - channel_index
+      - channel_name
+      - samples
+      title: SignalChannelRead
+      description: A decimated channel signal within a requested window.
+    SignalWindowRead:
+      properties:
+        dataset_id:
+          type: string
+          format: uuid
+          title: Dataset Id
+        sampling_frequency_hz:
+          type: number
+          title: Sampling Frequency Hz
+        channel_count:
+          type: integer
+          title: Channel Count
+        sample_count:
+          type: integer
+          title: Sample Count
+        duration_seconds:
+          type: number
+          title: Duration Seconds
+        start_seconds:
+          type: number
+          title: Start Seconds
+        end_seconds:
+          type: number
+          title: End Seconds
+        sample_start:
+          type: integer
+          title: Sample Start
+        sample_end:
+          type: integer
+          title: Sample End
+        channel_indices:
+          items:
+            type: integer
+          type: array
+          title: Channel Indices
+        points_per_channel:
+          type: integer
+          title: Points Per Channel
+        downsampled:
+          type: boolean
+          title: Downsampled
+        downsample_factor:
+          type: integer
+          title: Downsample Factor
+        time_seconds:
+          items:
+            type: number
+          type: array
+          title: Time Seconds
+        channels:
+          items:
+            $ref: '#/components/schemas/SignalChannelRead'
+          type: array
+          title: Channels
+      additionalProperties: false
+      type: object
+      required:
+      - dataset_id
+      - sampling_frequency_hz
+      - channel_count
+      - sample_count
+      - duration_seconds
+      - start_seconds
+      - end_seconds
+      - sample_start
+      - sample_end
+      - channel_indices
+      - points_per_channel
+      - downsampled
+      - downsample_factor
+      - time_seconds
+      - channels
+      title: SignalWindowRead
+      description: 'A bounded, decimated slice of a recording for display.
+
+
+        ``samples`` align with ``time_seconds``; non-finite samples are reported as
+
+        ``null`` so a chart renders a gap, and ``downsampled`` records whether the
+
+        samples were decimated for transport.'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Signed access token supplied in the Authorization header.
+    SessionCookieAuth:
+      type: apiKey
+      in: cookie
+      name: eeg-lab_session
+      description: HttpOnly session cookie; name defaults to eeg-lab_session and is configurable.
+  headers:
+    RequestId:
+      description: Request correlation identifier.
+      schema:
+        type: string
+    WwwAuthenticate:
+      description: Authentication challenge returned with 401 responses.
+      schema:
+        type: string
+        example: Bearer
+    SetCookie:
+      description: HttpOnly session cookie set or expired by the authentication endpoint.
+      schema:
+        type: string
+servers:
+- url: http://localhost:8000
+  description: Local development; production host is deployment-configured.
+tags:
+- name: authentication
+  description: Development token issuance and session sign-out.
+- name: identity
+  description: Authenticated user profile and organisation memberships.
+- name: organisations
+  description: Organisation and membership management.
+- name: studies
+  description: Organisation-scoped research studies.
+- name: datasets
+  description: Dataset registration and metadata.
+- name: uploads
+  description: Backend-mediated recording uploads and validation.
+- name: analyses
+  description: Asynchronous analyses, status, results, and cancellation.
+- name: health
+  description: Unauthenticated liveness and readiness probes.
+- name: observability
+  description: Prometheus metrics for trusted monitoring systems.

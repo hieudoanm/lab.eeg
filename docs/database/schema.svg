@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="966" height="2359" viewBox="0 0 966 2359" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#7c3aed"/></marker>
+<marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6"><circle cx="5" cy="5" r="3.2" fill="#6366f1"/></marker>
+</defs>
+<rect width="966" height="2359" fill="#ffffff"/>
+<rect x="48" y="48" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="163" y="69" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">users</text>
+<rect x="48" y="82" width="230" height="27" fill="#f5f3ff"/>
+<text x="56" y="99" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="82" y="99" font-size="11" fill="#0f172a">id</text>
+<line x1="163" y1="82" x2="163" y2="109" stroke="#e2e8f0"/>
+<text x="270" y="99" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="109" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="126" font-size="11" fill="#0f172a">identity_provider</text>
+<line x1="163" y1="109" x2="163" y2="136" stroke="#e2e8f0"/>
+<text x="270" y="126" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="136" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="153" font-size="11" fill="#0f172a">external_subject</text>
+<line x1="163" y1="136" x2="163" y2="163" stroke="#e2e8f0"/>
+<text x="270" y="153" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="163" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="180" font-size="11" fill="#0f172a">email</text>
+<line x1="163" y1="163" x2="163" y2="190" stroke="#e2e8f0"/>
+<text x="270" y="180" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="190" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="207" font-size="11" fill="#0f172a">display_name</text>
+<line x1="163" y1="190" x2="163" y2="217" stroke="#e2e8f0"/>
+<text x="270" y="207" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="217" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="234" font-size="11" fill="#0f172a">created_at</text>
+<line x1="163" y1="217" x2="163" y2="244" stroke="#e2e8f0"/>
+<text x="270" y="234" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="244" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="261" font-size="11" fill="#0f172a">updated_at</text>
+<line x1="163" y1="244" x2="163" y2="271" stroke="#e2e8f0"/>
+<text x="270" y="261" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="271" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="288" font-size="11" fill="#0f172a">disabled_at</text>
+<line x1="163" y1="271" x2="163" y2="298" stroke="#e2e8f0"/>
+<text x="270" y="288" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="298" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="315" font-size="9" font-weight="bold" fill="#7c3aed">UK</text>
+<text x="82" y="315" font-size="11" fill="#0f172a">(identity_provider,</text>
+<line x1="163" y1="298" x2="163" y2="325" stroke="#e2e8f0"/>
+<text x="270" y="315" font-size="9" fill="#64748b" text-anchor="end">EXTERNAL_SUBJECT)</text>
+<rect x="48" y="48" width="230" height="277" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="368" y="48" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="483" y="69" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">organisations</text>
+<rect x="368" y="82" width="230" height="27" fill="#f5f3ff"/>
+<text x="376" y="99" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="402" y="99" font-size="11" fill="#0f172a">id</text>
+<line x1="483" y1="82" x2="483" y2="109" stroke="#e2e8f0"/>
+<text x="590" y="99" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="109" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="126" font-size="11" fill="#0f172a">name</text>
+<line x1="483" y1="109" x2="483" y2="136" stroke="#e2e8f0"/>
+<text x="590" y="126" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="136" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="153" font-size="11" fill="#0f172a">slug</text>
+<line x1="483" y1="136" x2="483" y2="163" stroke="#e2e8f0"/>
+<text x="590" y="153" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="163" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="180" font-size="11" fill="#0f172a">status</text>
+<line x1="483" y1="163" x2="483" y2="190" stroke="#e2e8f0"/>
+<text x="590" y="180" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="190" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="207" font-size="11" fill="#0f172a">created_at</text>
+<line x1="483" y1="190" x2="483" y2="217" stroke="#e2e8f0"/>
+<text x="590" y="207" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="368" y="217" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="234" font-size="11" fill="#0f172a">updated_at</text>
+<line x1="483" y1="217" x2="483" y2="244" stroke="#e2e8f0"/>
+<text x="590" y="234" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="368" y="48" width="230" height="196" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="688" y="48" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="803" y="69" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">memberships</text>
+<rect x="688" y="82" width="230" height="27" fill="#f5f3ff"/>
+<text x="696" y="99" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="722" y="99" font-size="11" fill="#0f172a">id</text>
+<line x1="803" y1="82" x2="803" y2="109" stroke="#e2e8f0"/>
+<text x="910" y="99" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="688" y="109" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="126" font-size="11" fill="#0f172a">organisation_id</text>
+<line x1="803" y1="109" x2="803" y2="136" stroke="#e2e8f0"/>
+<text x="910" y="126" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="688" y="136" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="153" font-size="11" fill="#0f172a">user_id</text>
+<line x1="803" y1="136" x2="803" y2="163" stroke="#e2e8f0"/>
+<text x="910" y="153" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="688" y="163" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="180" font-size="11" fill="#0f172a">role</text>
+<line x1="803" y1="163" x2="803" y2="190" stroke="#e2e8f0"/>
+<text x="910" y="180" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="688" y="190" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="207" font-size="11" fill="#0f172a">created_at</text>
+<line x1="803" y1="190" x2="803" y2="217" stroke="#e2e8f0"/>
+<text x="910" y="207" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="688" y="217" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="234" font-size="11" fill="#0f172a">updated_at</text>
+<line x1="803" y1="217" x2="803" y2="244" stroke="#e2e8f0"/>
+<text x="910" y="234" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="688" y="244" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="261" font-size="9" font-weight="bold" fill="#7c3aed">UK</text>
+<text x="722" y="261" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="803" y1="244" x2="803" y2="271" stroke="#e2e8f0"/>
+<text x="910" y="261" font-size="9" fill="#64748b" text-anchor="end">USER_ID)</text>
+<rect x="688" y="271" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="288" font-size="9" font-weight="bold" fill="#7c3aed">UK</text>
+<text x="722" y="288" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="803" y1="271" x2="803" y2="298" stroke="#e2e8f0"/>
+<text x="910" y="288" font-size="9" fill="#64748b" text-anchor="end">ID)</text>
+<rect x="688" y="48" width="230" height="250" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="48" y="395" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="163" y="416" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">studies</text>
+<rect x="48" y="429" width="230" height="27" fill="#f5f3ff"/>
+<text x="56" y="446" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="82" y="446" font-size="11" fill="#0f172a">id</text>
+<line x1="163" y1="429" x2="163" y2="456" stroke="#e2e8f0"/>
+<text x="270" y="446" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="456" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="473" font-size="11" fill="#0f172a">organisation_id</text>
+<line x1="163" y1="456" x2="163" y2="483" stroke="#e2e8f0"/>
+<text x="270" y="473" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="483" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="500" font-size="11" fill="#0f172a">name</text>
+<line x1="163" y1="483" x2="163" y2="510" stroke="#e2e8f0"/>
+<text x="270" y="500" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="510" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="527" font-size="11" fill="#0f172a">description</text>
+<line x1="163" y1="510" x2="163" y2="537" stroke="#e2e8f0"/>
+<text x="270" y="527" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="537" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="554" font-size="11" fill="#0f172a">status</text>
+<line x1="163" y1="537" x2="163" y2="564" stroke="#e2e8f0"/>
+<text x="270" y="554" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="564" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="581" font-size="11" fill="#0f172a">created_by</text>
+<line x1="163" y1="564" x2="163" y2="591" stroke="#e2e8f0"/>
+<text x="270" y="581" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="591" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="608" font-size="11" fill="#0f172a">created_at</text>
+<line x1="163" y1="591" x2="163" y2="618" stroke="#e2e8f0"/>
+<text x="270" y="608" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="618" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="635" font-size="11" fill="#0f172a">updated_at</text>
+<line x1="163" y1="618" x2="163" y2="645" stroke="#e2e8f0"/>
+<text x="270" y="635" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="645" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="662" font-size="11" fill="#0f172a">archived_at</text>
+<line x1="163" y1="645" x2="163" y2="672" stroke="#e2e8f0"/>
+<text x="270" y="662" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="672" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="689" font-size="9" font-weight="bold" fill="#7c3aed">UK</text>
+<text x="82" y="689" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="163" y1="672" x2="163" y2="699" stroke="#e2e8f0"/>
+<text x="270" y="689" font-size="9" fill="#64748b" text-anchor="end">ID)</text>
+<rect x="48" y="699" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="716" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="163" y1="699" x2="163" y2="726" stroke="#e2e8f0"/>
+<text x="270" y="716" font-size="9" fill="#64748b" text-anchor="end">CREATED_AT,</text>
+<rect x="48" y="726" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="743" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="163" y1="726" x2="163" y2="753" stroke="#e2e8f0"/>
+<text x="270" y="743" font-size="9" fill="#64748b" text-anchor="end">STATUS,</text>
+<rect x="48" y="395" width="230" height="358" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="368" y="395" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="483" y="416" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">datasets</text>
+<rect x="368" y="429" width="230" height="27" fill="#f5f3ff"/>
+<text x="376" y="446" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="402" y="446" font-size="11" fill="#0f172a">id</text>
+<line x1="483" y1="429" x2="483" y2="456" stroke="#e2e8f0"/>
+<text x="590" y="446" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="456" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="473" font-size="11" fill="#0f172a">organisation_id</text>
+<line x1="483" y1="456" x2="483" y2="483" stroke="#e2e8f0"/>
+<text x="590" y="473" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="483" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="500" font-size="11" fill="#0f172a">study_id</text>
+<line x1="483" y1="483" x2="483" y2="510" stroke="#e2e8f0"/>
+<text x="590" y="500" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="510" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="527" font-size="11" fill="#0f172a">name</text>
+<line x1="483" y1="510" x2="483" y2="537" stroke="#e2e8f0"/>
+<text x="590" y="527" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="537" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="554" font-size="11" fill="#0f172a">description</text>
+<line x1="483" y1="537" x2="483" y2="564" stroke="#e2e8f0"/>
+<text x="590" y="554" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="564" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="581" font-size="11" fill="#0f172a">status</text>
+<line x1="483" y1="564" x2="483" y2="591" stroke="#e2e8f0"/>
+<text x="590" y="581" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="591" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="608" font-size="11" fill="#0f172a">format</text>
+<line x1="483" y1="591" x2="483" y2="618" stroke="#e2e8f0"/>
+<text x="590" y="608" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="618" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="635" font-size="11" fill="#0f172a">storage_key</text>
+<line x1="483" y1="618" x2="483" y2="645" stroke="#e2e8f0"/>
+<text x="590" y="635" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="645" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="662" font-size="11" fill="#0f172a">object_version</text>
+<line x1="483" y1="645" x2="483" y2="672" stroke="#e2e8f0"/>
+<text x="590" y="662" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="672" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="689" font-size="11" fill="#0f172a">checksum_sha256</text>
+<line x1="483" y1="672" x2="483" y2="699" stroke="#e2e8f0"/>
+<text x="590" y="689" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="699" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="716" font-size="11" fill="#0f172a">file_size_bytes</text>
+<line x1="483" y1="699" x2="483" y2="726" stroke="#e2e8f0"/>
+<text x="590" y="716" font-size="9" fill="#64748b" text-anchor="end">BIGINT</text>
+<rect x="368" y="726" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="743" font-size="11" fill="#0f172a">sampling_frequency_hz</text>
+<line x1="483" y1="726" x2="483" y2="753" stroke="#e2e8f0"/>
+<text x="590" y="743" font-size="9" fill="#64748b" text-anchor="end">FLOAT8</text>
+<rect x="368" y="753" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="770" font-size="11" fill="#0f172a">channel_count</text>
+<line x1="483" y1="753" x2="483" y2="780" stroke="#e2e8f0"/>
+<text x="590" y="770" font-size="9" fill="#64748b" text-anchor="end">INTEGER</text>
+<rect x="368" y="780" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="797" font-size="11" fill="#0f172a">sample_count</text>
+<line x1="483" y1="780" x2="483" y2="807" stroke="#e2e8f0"/>
+<text x="590" y="797" font-size="9" fill="#64748b" text-anchor="end">BIGINT</text>
+<rect x="368" y="807" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="824" font-size="11" fill="#0f172a">duration_seconds</text>
+<line x1="483" y1="807" x2="483" y2="834" stroke="#e2e8f0"/>
+<text x="590" y="824" font-size="9" fill="#64748b" text-anchor="end">FLOAT8</text>
+<rect x="368" y="834" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="851" font-size="11" fill="#0f172a">channel_names</text>
+<line x1="483" y1="834" x2="483" y2="861" stroke="#e2e8f0"/>
+<text x="590" y="851" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="368" y="861" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="878" font-size="11" fill="#0f172a">channel_units</text>
+<line x1="483" y1="861" x2="483" y2="888" stroke="#e2e8f0"/>
+<text x="590" y="878" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="368" y="888" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="905" font-size="11" fill="#0f172a">metadata</text>
+<line x1="483" y1="888" x2="483" y2="915" stroke="#e2e8f0"/>
+<text x="590" y="905" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="368" y="915" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="932" font-size="11" fill="#0f172a">validation_report</text>
+<line x1="483" y1="915" x2="483" y2="942" stroke="#e2e8f0"/>
+<text x="590" y="932" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="368" y="942" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="959" font-size="11" fill="#0f172a">source_description</text>
+<line x1="483" y1="942" x2="483" y2="969" stroke="#e2e8f0"/>
+<text x="590" y="959" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="969" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="986" font-size="11" fill="#0f172a">uploaded_by</text>
+<line x1="483" y1="969" x2="483" y2="996" stroke="#e2e8f0"/>
+<text x="590" y="986" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="996" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="1013" font-size="11" fill="#0f172a">created_at</text>
+<line x1="483" y1="996" x2="483" y2="1023" stroke="#e2e8f0"/>
+<text x="590" y="1013" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="368" y="1023" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="1040" font-size="11" fill="#0f172a">updated_at</text>
+<line x1="483" y1="1023" x2="483" y2="1050" stroke="#e2e8f0"/>
+<text x="590" y="1040" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="368" y="1050" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="1067" font-size="11" fill="#0f172a">validated_at</text>
+<line x1="483" y1="1050" x2="483" y2="1077" stroke="#e2e8f0"/>
+<text x="590" y="1067" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="368" y="1077" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="1094" font-size="11" fill="#0f172a">archived_at</text>
+<line x1="483" y1="1077" x2="483" y2="1104" stroke="#e2e8f0"/>
+<text x="590" y="1094" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="368" y="1104" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="1121" font-size="9" font-weight="bold" fill="#7c3aed">UK</text>
+<text x="402" y="1121" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="483" y1="1104" x2="483" y2="1131" stroke="#e2e8f0"/>
+<text x="590" y="1121" font-size="9" fill="#64748b" text-anchor="end">ID)</text>
+<rect x="368" y="1131" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="1148" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="483" y1="1131" x2="483" y2="1158" stroke="#e2e8f0"/>
+<text x="590" y="1148" font-size="9" fill="#64748b" text-anchor="end">STUDY_ID,</text>
+<rect x="368" y="1158" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="1175" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="483" y1="1158" x2="483" y2="1185" stroke="#e2e8f0"/>
+<text x="590" y="1175" font-size="9" fill="#64748b" text-anchor="end">STATUS,</text>
+<rect x="368" y="395" width="230" height="790" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="688" y="395" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="803" y="416" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">upload_sessions</text>
+<rect x="688" y="429" width="230" height="27" fill="#f5f3ff"/>
+<text x="696" y="446" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="722" y="446" font-size="11" fill="#0f172a">id</text>
+<line x1="803" y1="429" x2="803" y2="456" stroke="#e2e8f0"/>
+<text x="910" y="446" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="688" y="456" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="473" font-size="11" fill="#0f172a">organisation_id</text>
+<line x1="803" y1="456" x2="803" y2="483" stroke="#e2e8f0"/>
+<text x="910" y="473" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="688" y="483" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="500" font-size="11" fill="#0f172a">dataset_id</text>
+<line x1="803" y1="483" x2="803" y2="510" stroke="#e2e8f0"/>
+<text x="910" y="500" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="688" y="510" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="527" font-size="11" fill="#0f172a">created_by</text>
+<line x1="803" y1="510" x2="803" y2="537" stroke="#e2e8f0"/>
+<text x="910" y="527" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="688" y="537" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="554" font-size="11" fill="#0f172a">status</text>
+<line x1="803" y1="537" x2="803" y2="564" stroke="#e2e8f0"/>
+<text x="910" y="554" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="688" y="564" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="581" font-size="11" fill="#0f172a">object_key</text>
+<line x1="803" y1="564" x2="803" y2="591" stroke="#e2e8f0"/>
+<text x="910" y="581" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="688" y="591" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="608" font-size="11" fill="#0f172a">expected_size_bytes</text>
+<line x1="803" y1="591" x2="803" y2="618" stroke="#e2e8f0"/>
+<text x="910" y="608" font-size="9" fill="#64748b" text-anchor="end">BIGINT</text>
+<rect x="688" y="618" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="635" font-size="11" fill="#0f172a">expected_checksum_sha256</text>
+<line x1="803" y1="618" x2="803" y2="645" stroke="#e2e8f0"/>
+<text x="910" y="635" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="688" y="645" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="662" font-size="11" fill="#0f172a">expires_at</text>
+<line x1="803" y1="645" x2="803" y2="672" stroke="#e2e8f0"/>
+<text x="910" y="662" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="688" y="672" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="689" font-size="11" fill="#0f172a">finalised_at</text>
+<line x1="803" y1="672" x2="803" y2="699" stroke="#e2e8f0"/>
+<text x="910" y="689" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="688" y="699" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="716" font-size="11" fill="#0f172a">created_at</text>
+<line x1="803" y1="699" x2="803" y2="726" stroke="#e2e8f0"/>
+<text x="910" y="716" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="688" y="726" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="743" font-size="11" fill="#0f172a">updated_at</text>
+<line x1="803" y1="726" x2="803" y2="753" stroke="#e2e8f0"/>
+<text x="910" y="743" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="688" y="753" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="770" font-size="11" fill="#0f172a">manifest</text>
+<line x1="803" y1="753" x2="803" y2="780" stroke="#e2e8f0"/>
+<text x="910" y="770" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="688" y="780" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="797" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="803" y1="780" x2="803" y2="807" stroke="#e2e8f0"/>
+<text x="910" y="797" font-size="9" fill="#64748b" text-anchor="end">STATUS,</text>
+<rect x="688" y="807" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="824" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="803" y1="807" x2="803" y2="834" stroke="#e2e8f0"/>
+<text x="910" y="824" font-size="9" fill="#64748b" text-anchor="end">DATASET_ID)</text>
+<rect x="688" y="395" width="230" height="439" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="48" y="1255" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="163" y="1276" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">analysis_jobs</text>
+<rect x="48" y="1289" width="230" height="27" fill="#f5f3ff"/>
+<text x="56" y="1306" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="82" y="1306" font-size="11" fill="#0f172a">id</text>
+<line x1="163" y1="1289" x2="163" y2="1316" stroke="#e2e8f0"/>
+<text x="270" y="1306" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="1316" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1333" font-size="11" fill="#0f172a">organisation_id</text>
+<line x1="163" y1="1316" x2="163" y2="1343" stroke="#e2e8f0"/>
+<text x="270" y="1333" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="1343" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="1360" font-size="11" fill="#0f172a">dataset_id</text>
+<line x1="163" y1="1343" x2="163" y2="1370" stroke="#e2e8f0"/>
+<text x="270" y="1360" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="1370" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1387" font-size="11" fill="#0f172a">requested_by</text>
+<line x1="163" y1="1370" x2="163" y2="1397" stroke="#e2e8f0"/>
+<text x="270" y="1387" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="1397" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="1414" font-size="11" fill="#0f172a">analysis_type</text>
+<line x1="163" y1="1397" x2="163" y2="1424" stroke="#e2e8f0"/>
+<text x="270" y="1414" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="1424" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1441" font-size="11" fill="#0f172a">algorithm_version</text>
+<line x1="163" y1="1424" x2="163" y2="1451" stroke="#e2e8f0"/>
+<text x="270" y="1441" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="1451" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="1468" font-size="11" fill="#0f172a">parameters</text>
+<line x1="163" y1="1451" x2="163" y2="1478" stroke="#e2e8f0"/>
+<text x="270" y="1468" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="48" y="1478" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1495" font-size="11" fill="#0f172a">status</text>
+<line x1="163" y1="1478" x2="163" y2="1505" stroke="#e2e8f0"/>
+<text x="270" y="1495" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="1505" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="1522" font-size="11" fill="#0f172a">attempt_count</text>
+<line x1="163" y1="1505" x2="163" y2="1532" stroke="#e2e8f0"/>
+<text x="270" y="1522" font-size="9" fill="#64748b" text-anchor="end">INTEGER</text>
+<rect x="48" y="1532" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1549" font-size="11" fill="#0f172a">max_attempts</text>
+<line x1="163" y1="1532" x2="163" y2="1559" stroke="#e2e8f0"/>
+<text x="270" y="1549" font-size="9" fill="#64748b" text-anchor="end">INTEGER</text>
+<rect x="48" y="1559" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="1576" font-size="11" fill="#0f172a">error_code</text>
+<line x1="163" y1="1559" x2="163" y2="1586" stroke="#e2e8f0"/>
+<text x="270" y="1576" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="1586" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1603" font-size="11" fill="#0f172a">error_message</text>
+<line x1="163" y1="1586" x2="163" y2="1613" stroke="#e2e8f0"/>
+<text x="270" y="1603" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="1613" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="1630" font-size="11" fill="#0f172a">idempotency_key</text>
+<line x1="163" y1="1613" x2="163" y2="1640" stroke="#e2e8f0"/>
+<text x="270" y="1630" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="1640" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1657" font-size="11" fill="#0f172a">requested_at</text>
+<line x1="163" y1="1640" x2="163" y2="1667" stroke="#e2e8f0"/>
+<text x="270" y="1657" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="1667" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="1684" font-size="11" fill="#0f172a">started_at</text>
+<line x1="163" y1="1667" x2="163" y2="1694" stroke="#e2e8f0"/>
+<text x="270" y="1684" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="1694" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1711" font-size="11" fill="#0f172a">completed_at</text>
+<line x1="163" y1="1694" x2="163" y2="1721" stroke="#e2e8f0"/>
+<text x="270" y="1711" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="1721" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="1738" font-size="11" fill="#0f172a">lease_expires_at</text>
+<line x1="163" y1="1721" x2="163" y2="1748" stroke="#e2e8f0"/>
+<text x="270" y="1738" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="1748" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1765" font-size="11" fill="#0f172a">created_at</text>
+<line x1="163" y1="1748" x2="163" y2="1775" stroke="#e2e8f0"/>
+<text x="270" y="1765" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="1775" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="1792" font-size="11" fill="#0f172a">updated_at</text>
+<line x1="163" y1="1775" x2="163" y2="1802" stroke="#e2e8f0"/>
+<text x="270" y="1792" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="1802" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1819" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="163" y1="1802" x2="163" y2="1829" stroke="#e2e8f0"/>
+<text x="270" y="1819" font-size="9" fill="#64748b" text-anchor="end">REQUESTED_AT,</text>
+<rect x="48" y="1829" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="1846" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="163" y1="1829" x2="163" y2="1856" stroke="#e2e8f0"/>
+<text x="270" y="1846" font-size="9" fill="#64748b" text-anchor="end">STATUS,</text>
+<rect x="48" y="1856" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="1873" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="163" y1="1856" x2="163" y2="1883" stroke="#e2e8f0"/>
+<text x="270" y="1873" font-size="9" fill="#64748b" text-anchor="end">DATASET_ID,</text>
+<rect x="48" y="1255" width="230" height="628" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="368" y="1255" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="483" y="1276" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">analysis_results</text>
+<rect x="368" y="1289" width="230" height="27" fill="#f5f3ff"/>
+<text x="376" y="1306" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="402" y="1306" font-size="11" fill="#0f172a">id</text>
+<line x1="483" y1="1289" x2="483" y2="1316" stroke="#e2e8f0"/>
+<text x="590" y="1306" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="1316" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="1333" font-size="11" fill="#0f172a">organisation_id</text>
+<line x1="483" y1="1316" x2="483" y2="1343" stroke="#e2e8f0"/>
+<text x="590" y="1333" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="1343" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="1360" font-size="11" fill="#0f172a">job_id</text>
+<line x1="483" y1="1343" x2="483" y2="1370" stroke="#e2e8f0"/>
+<text x="590" y="1360" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="1370" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="1387" font-size="11" fill="#0f172a">dataset_id</text>
+<line x1="483" y1="1370" x2="483" y2="1397" stroke="#e2e8f0"/>
+<text x="590" y="1387" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="1397" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="1414" font-size="11" fill="#0f172a">dataset_checksum_sha256</text>
+<line x1="483" y1="1397" x2="483" y2="1424" stroke="#e2e8f0"/>
+<text x="590" y="1414" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="1424" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="1441" font-size="11" fill="#0f172a">algorithm_version</text>
+<line x1="483" y1="1424" x2="483" y2="1451" stroke="#e2e8f0"/>
+<text x="590" y="1441" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="1451" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="1468" font-size="11" fill="#0f172a">result_schema_version</text>
+<line x1="483" y1="1451" x2="483" y2="1478" stroke="#e2e8f0"/>
+<text x="590" y="1468" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="1478" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="1495" font-size="11" fill="#0f172a">results</text>
+<line x1="483" y1="1478" x2="483" y2="1505" stroke="#e2e8f0"/>
+<text x="590" y="1495" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="368" y="1505" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="1522" font-size="11" fill="#0f172a">provenance</text>
+<line x1="483" y1="1505" x2="483" y2="1532" stroke="#e2e8f0"/>
+<text x="590" y="1522" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="368" y="1532" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="1549" font-size="11" fill="#0f172a">created_at</text>
+<line x1="483" y1="1532" x2="483" y2="1559" stroke="#e2e8f0"/>
+<text x="590" y="1549" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="368" y="1559" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="1576" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="483" y1="1559" x2="483" y2="1586" stroke="#e2e8f0"/>
+<text x="590" y="1576" font-size="9" fill="#64748b" text-anchor="end">DATASET_ID,</text>
+<rect x="368" y="1255" width="230" height="331" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="688" y="1255" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="803" y="1276" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">outbox_events</text>
+<rect x="688" y="1289" width="230" height="27" fill="#f5f3ff"/>
+<text x="696" y="1306" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="722" y="1306" font-size="11" fill="#0f172a">id</text>
+<line x1="803" y1="1289" x2="803" y2="1316" stroke="#e2e8f0"/>
+<text x="910" y="1306" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="688" y="1316" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="1333" font-size="11" fill="#0f172a">organisation_id</text>
+<line x1="803" y1="1316" x2="803" y2="1343" stroke="#e2e8f0"/>
+<text x="910" y="1333" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="688" y="1343" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="1360" font-size="11" fill="#0f172a">event_type</text>
+<line x1="803" y1="1343" x2="803" y2="1370" stroke="#e2e8f0"/>
+<text x="910" y="1360" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="688" y="1370" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="1387" font-size="11" fill="#0f172a">aggregate_type</text>
+<line x1="803" y1="1370" x2="803" y2="1397" stroke="#e2e8f0"/>
+<text x="910" y="1387" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="688" y="1397" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="1414" font-size="11" fill="#0f172a">aggregate_id</text>
+<line x1="803" y1="1397" x2="803" y2="1424" stroke="#e2e8f0"/>
+<text x="910" y="1414" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="688" y="1424" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="1441" font-size="11" fill="#0f172a">payload</text>
+<line x1="803" y1="1424" x2="803" y2="1451" stroke="#e2e8f0"/>
+<text x="910" y="1441" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="688" y="1451" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="1468" font-size="11" fill="#0f172a">created_at</text>
+<line x1="803" y1="1451" x2="803" y2="1478" stroke="#e2e8f0"/>
+<text x="910" y="1468" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="688" y="1478" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="1495" font-size="11" fill="#0f172a">published_at</text>
+<line x1="803" y1="1478" x2="803" y2="1505" stroke="#e2e8f0"/>
+<text x="910" y="1495" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="688" y="1505" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="1522" font-size="11" fill="#0f172a">attempt_count</text>
+<line x1="803" y1="1505" x2="803" y2="1532" stroke="#e2e8f0"/>
+<text x="910" y="1522" font-size="9" fill="#64748b" text-anchor="end">INTEGER</text>
+<rect x="688" y="1532" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="1549" font-size="11" fill="#0f172a">next_attempt_at</text>
+<line x1="803" y1="1532" x2="803" y2="1559" stroke="#e2e8f0"/>
+<text x="910" y="1549" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="688" y="1559" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="1576" font-size="11" fill="#0f172a">last_error_code</text>
+<line x1="803" y1="1559" x2="803" y2="1586" stroke="#e2e8f0"/>
+<text x="910" y="1576" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="688" y="1255" width="230" height="331" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="48" y="1953" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="163" y="1974" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">idempotency_keys</text>
+<rect x="48" y="1987" width="230" height="27" fill="#f5f3ff"/>
+<text x="56" y="2004" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="82" y="2004" font-size="11" fill="#0f172a">id</text>
+<line x1="163" y1="1987" x2="163" y2="2014" stroke="#e2e8f0"/>
+<text x="270" y="2004" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="2014" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="2031" font-size="11" fill="#0f172a">organisation_id</text>
+<line x1="163" y1="2014" x2="163" y2="2041" stroke="#e2e8f0"/>
+<text x="270" y="2031" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="2041" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="2058" font-size="11" fill="#0f172a">user_id</text>
+<line x1="163" y1="2041" x2="163" y2="2068" stroke="#e2e8f0"/>
+<text x="270" y="2058" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="2068" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="2085" font-size="11" fill="#0f172a">operation</text>
+<line x1="163" y1="2068" x2="163" y2="2095" stroke="#e2e8f0"/>
+<text x="270" y="2085" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="2095" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="2112" font-size="11" fill="#0f172a">key</text>
+<line x1="163" y1="2095" x2="163" y2="2122" stroke="#e2e8f0"/>
+<text x="270" y="2112" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="2122" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="2139" font-size="11" fill="#0f172a">request_hash</text>
+<line x1="163" y1="2122" x2="163" y2="2149" stroke="#e2e8f0"/>
+<text x="270" y="2139" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="48" y="2149" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="2166" font-size="11" fill="#0f172a">response_status</text>
+<line x1="163" y1="2149" x2="163" y2="2176" stroke="#e2e8f0"/>
+<text x="270" y="2166" font-size="9" fill="#64748b" text-anchor="end">INTEGER</text>
+<rect x="48" y="2176" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="2193" font-size="11" fill="#0f172a">response_body</text>
+<line x1="163" y1="2176" x2="163" y2="2203" stroke="#e2e8f0"/>
+<text x="270" y="2193" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="48" y="2203" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="2220" font-size="11" fill="#0f172a">resource_id</text>
+<line x1="163" y1="2203" x2="163" y2="2230" stroke="#e2e8f0"/>
+<text x="270" y="2220" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="48" y="2230" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="2247" font-size="11" fill="#0f172a">created_at</text>
+<line x1="163" y1="2230" x2="163" y2="2257" stroke="#e2e8f0"/>
+<text x="270" y="2247" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="2257" width="230" height="27" fill="#ffffff"/>
+<text x="56" y="2274" font-size="11" fill="#0f172a">expires_at</text>
+<line x1="163" y1="2257" x2="163" y2="2284" stroke="#e2e8f0"/>
+<text x="270" y="2274" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="48" y="2284" width="230" height="27" fill="#f8fafc"/>
+<text x="56" y="2301" font-size="9" font-weight="bold" fill="#7c3aed">UK</text>
+<text x="82" y="2301" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="163" y1="2284" x2="163" y2="2311" stroke="#e2e8f0"/>
+<text x="270" y="2301" font-size="9" fill="#64748b" text-anchor="end">USER_ID,</text>
+<rect x="48" y="1953" width="230" height="358" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="368" y="1953" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="483" y="1974" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">audit_events</text>
+<rect x="368" y="1987" width="230" height="27" fill="#f5f3ff"/>
+<text x="376" y="2004" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="402" y="2004" font-size="11" fill="#0f172a">id</text>
+<line x1="483" y1="1987" x2="483" y2="2014" stroke="#e2e8f0"/>
+<text x="590" y="2004" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="2014" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="2031" font-size="11" fill="#0f172a">organisation_id</text>
+<line x1="483" y1="2014" x2="483" y2="2041" stroke="#e2e8f0"/>
+<text x="590" y="2031" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="2041" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="2058" font-size="11" fill="#0f172a">actor_user_id</text>
+<line x1="483" y1="2041" x2="483" y2="2068" stroke="#e2e8f0"/>
+<text x="590" y="2058" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="2068" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="2085" font-size="11" fill="#0f172a">action</text>
+<line x1="483" y1="2068" x2="483" y2="2095" stroke="#e2e8f0"/>
+<text x="590" y="2085" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="2095" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="2112" font-size="11" fill="#0f172a">resource_type</text>
+<line x1="483" y1="2095" x2="483" y2="2122" stroke="#e2e8f0"/>
+<text x="590" y="2112" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="2122" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="2139" font-size="11" fill="#0f172a">resource_id</text>
+<line x1="483" y1="2122" x2="483" y2="2149" stroke="#e2e8f0"/>
+<text x="590" y="2139" font-size="9" fill="#64748b" text-anchor="end">UUID</text>
+<rect x="368" y="2149" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="2166" font-size="11" fill="#0f172a">request_id</text>
+<line x1="483" y1="2149" x2="483" y2="2176" stroke="#e2e8f0"/>
+<text x="590" y="2166" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="368" y="2176" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="2193" font-size="11" fill="#0f172a">metadata</text>
+<line x1="483" y1="2176" x2="483" y2="2203" stroke="#e2e8f0"/>
+<text x="590" y="2193" font-size="9" fill="#64748b" text-anchor="end">JSONB</text>
+<rect x="368" y="2203" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="2220" font-size="11" fill="#0f172a">created_at</text>
+<line x1="483" y1="2203" x2="483" y2="2230" stroke="#e2e8f0"/>
+<text x="590" y="2220" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="368" y="2230" width="230" height="27" fill="#f8fafc"/>
+<text x="376" y="2247" font-size="11" fill="#0f172a">(organisation_id,</text>
+<line x1="483" y1="2230" x2="483" y2="2257" stroke="#e2e8f0"/>
+<text x="590" y="2247" font-size="9" fill="#64748b" text-anchor="end">CREATED_AT,</text>
+<rect x="368" y="2257" width="230" height="27" fill="#ffffff"/>
+<text x="376" y="2274" font-size="11" fill="#0f172a">(resource_type,</text>
+<line x1="483" y1="2257" x2="483" y2="2284" stroke="#e2e8f0"/>
+<text x="590" y="2274" font-size="9" fill="#64748b" text-anchor="end">RESOURCE_ID)</text>
+<rect x="368" y="1953" width="230" height="331" fill="none" stroke="#e2e8f0" rx="6"/>
+<rect x="688" y="1953" width="230" height="34" fill="#0f172a" rx="6"/>
+<text x="803" y="1974" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">schema_migrations</text>
+<rect x="688" y="1987" width="230" height="27" fill="#f5f3ff"/>
+<text x="696" y="2004" font-size="9" font-weight="bold" fill="#7c3aed">PK</text>
+<text x="722" y="2004" font-size="11" fill="#0f172a">version</text>
+<line x1="803" y1="1987" x2="803" y2="2014" stroke="#e2e8f0"/>
+<text x="910" y="2004" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="688" y="2014" width="230" height="27" fill="#f8fafc"/>
+<text x="696" y="2031" font-size="11" fill="#0f172a">checksum</text>
+<line x1="803" y1="2014" x2="803" y2="2041" stroke="#e2e8f0"/>
+<text x="910" y="2031" font-size="9" fill="#64748b" text-anchor="end">TEXT</text>
+<rect x="688" y="2041" width="230" height="27" fill="#ffffff"/>
+<text x="696" y="2058" font-size="11" fill="#0f172a">applied_at</text>
+<line x1="803" y1="2041" x2="803" y2="2068" stroke="#e2e8f0"/>
+<text x="910" y="2058" font-size="9" fill="#64748b" text-anchor="end">TIMESTAMPTZ</text>
+<rect x="688" y="1953" width="230" height="115" fill="none" stroke="#e2e8f0" rx="6"/>
+</svg>

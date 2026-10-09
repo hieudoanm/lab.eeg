@@ -1,0 +1,141 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: eeg-lab-postgres
+    environment:
+      POSTGRES_USER: eeg-lab
+      POSTGRES_PASSWORD: eeg-lab
+      POSTGRES_DB: eeg-lab
+    ports:
+      - '5432:5432'
+    volumes:
+      - eeg-lab-pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U eeg-lab -d eeg-lab']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:8-alpine
+    container_name: eeg-lab-redis
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      dockerfile: packages/backend/Dockerfile
+    container_name: eeg-lab-migrate
+    command: ['/app/.venv/bin/python', '-m', 'app.db.migrations', 'upgrade']
+    environment:
+      DATABASE_URL: postgresql://eeg-lab:eeg-lab@postgres:5432/eeg-lab
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: 'no'
+
+  backend:
+    build:
+      context: .
+      dockerfile: packages/backend/Dockerfile
+    container_name: eeg-lab-backend
+    environment:
+      APP_ENV: development
+      AUTH_MODE: development
+      AUTH_TOKEN_SECRET: insecure-development-secret-change-me
+      DATABASE_URL: postgresql://eeg-lab:eeg-lab@postgres:5432/eeg-lab
+      REDIS_URL: redis://redis:6379/0
+      API_CORS_ORIGINS: '["http://localhost:3000","http://127.0.0.1:3000"]'
+      LOCAL_STORAGE_PATH: /app/.local-data/uploads
+    ports:
+      - '8000:8000'
+    volumes:
+      - eeg-lab-uploads:/app/.local-data/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: packages/backend/Dockerfile.worker
+    container_name: eeg-lab-worker
+    environment:
+      APP_ENV: development
+      AUTH_MODE: development
+      AUTH_TOKEN_SECRET: insecure-development-secret-change-me
+      DATABASE_URL: postgresql://eeg-lab:eeg-lab@postgres:5432/eeg-lab
+      REDIS_URL: redis://redis:6379/0
+      LOCAL_STORAGE_PATH: /app/.local-data/uploads
+    volumes:
+      - eeg-lab-uploads:/app/.local-data/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  dispatcher:
+    build:
+      context: .
+      dockerfile: packages/backend/Dockerfile.dispatcher
+    container_name: eeg-lab-dispatcher
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        set -e
+        while true; do
+          /app/.venv/bin/python -m app.workers.outbox_dispatcher
+          sleep 5
+        done
+    environment:
+      APP_ENV: development
+      AUTH_MODE: development
+      AUTH_TOKEN_SECRET: insecure-development-secret-change-me
+      DATABASE_URL: postgresql://eeg-lab:eeg-lab@postgres:5432/eeg-lab
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    init: true
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: packages/frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000/api/v1}
+    container_name: eeg-lab-frontend
+    ports:
+      - '3000:3000'
+    environment:
+      API_INTERNAL_BASE_URL: http://backend:8000/api/v1
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  eeg-lab-pgdata:
+  eeg-lab-uploads:
