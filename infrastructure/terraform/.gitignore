@@ -1,0 +1,72 @@
+# Local .terraform directories
+.terraform/
+.terraform.lock.hcl
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exported plan files
+*.tfplan
+*.plan
+
+# Provider and plugin cache
+.terraform.d/plugin-cache/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Backup files
+*.bak
+*.backup
+
+# Terraform Cloud/Enterprise credentials
+.terraformrc
+terraform.rc
+
+# Generated documentation
+docs/generated/
+
+# Test output
+test-output/
+*.test.log
+
+# Environment files (use .env.example instead)
+.env
+.env.*
+!.env.example
+
+# Secrets (should be in secret manager, not repo)
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets.tf
+secrets.auto.tfvars
+*.auto.tfvars
+
+# Local overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json

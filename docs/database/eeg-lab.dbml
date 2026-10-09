@@ -1,0 +1,248 @@
+Project NeuroLab {
+  database_type: 'PostgreSQL'
+  Note: 'ER diagram for the application schema. Kept in sync with packages/backend/migrations/versions/*.up.sql.'
+}
+
+Table users {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  identity_provider text [not null]
+  external_subject text [not null]
+  email text
+  display_name text
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  disabled_at timestamptz
+
+  indexes {
+    (identity_provider, external_subject) [unique, name: 'uq_users_identity']
+  }
+}
+
+Table organisations {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  name text [not null]
+  slug text
+  status text [not null, default: 'active']
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (slug) [unique, name: 'uq_organisations_slug']
+  }
+}
+
+Table memberships {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  organisation_id uuid [not null]
+  user_id uuid [not null]
+  role text [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (organisation_id, user_id) [unique, name: 'uq_memberships_organisation_user']
+    (organisation_id, id) [unique, name: 'uq_memberships_organisation_id_id']
+    (user_id) [name: 'ix_memberships_user_id']
+  }
+}
+
+Table studies {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  organisation_id uuid [not null]
+  name text [not null]
+  description text
+  status text [not null, default: 'active']
+  created_by uuid [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  archived_at timestamptz
+
+  indexes {
+    (organisation_id, id) [unique, name: 'uq_studies_organisation_id_id']
+    (organisation_id, created_at, id) [name: 'ix_studies_organisation_created_at', note: 'created_at and id are DESC']
+    (organisation_id, status, updated_at, id) [name: 'ix_studies_organisation_status_updated_at', note: 'updated_at and id are DESC']
+  }
+}
+
+Table datasets {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  organisation_id uuid [not null]
+  study_id uuid [not null]
+  name text [not null]
+  description text
+  status text [not null, default: 'pending_upload']
+  format text [not null, default: 'npy']
+  storage_key text
+  object_version text
+  checksum_sha256 text
+  file_size_bytes bigint
+  sampling_frequency_hz float8
+  channel_count integer
+  sample_count bigint
+  duration_seconds float8
+  channel_names jsonb
+  channel_units jsonb
+  metadata jsonb [not null, default: `'{}'::jsonb`]
+  validation_report jsonb
+  source_description text
+  uploaded_by uuid [not null]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  validated_at timestamptz
+  archived_at timestamptz
+
+  indexes {
+    (organisation_id, id) [unique, name: 'uq_datasets_organisation_id_id']
+    (organisation_id, study_id, created_at, id) [name: 'ix_datasets_organisation_study_created_at', note: 'created_at and id are DESC']
+    (organisation_id, status, updated_at, id) [name: 'ix_datasets_organisation_status_updated_at', note: 'updated_at and id are DESC']
+  }
+}
+
+Table upload_sessions {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  organisation_id uuid [not null]
+  dataset_id uuid [not null]
+  created_by uuid [not null]
+  status text [not null, default: 'created']
+  object_key text
+  expected_size_bytes bigint
+  expected_checksum_sha256 text
+  expires_at timestamptz [not null]
+  finalised_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  manifest jsonb [not null, default: `'{}'::jsonb`]
+
+  indexes {
+    (organisation_id, status, expires_at) [name: 'ix_upload_sessions_organisation_status_expires_at']
+    (organisation_id, dataset_id) [name: 'ix_upload_sessions_organisation_dataset']
+  }
+}
+
+Table analysis_jobs {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  organisation_id uuid [not null]
+  dataset_id uuid [not null]
+  requested_by uuid [not null]
+  analysis_type text [not null]
+  algorithm_version text [not null]
+  parameters jsonb [not null, default: `'{}'::jsonb`]
+  status text [not null, default: 'queued']
+  attempt_count integer [not null, default: 0]
+  max_attempts integer [not null, default: 3]
+  error_code text
+  error_message text
+  idempotency_key text
+  requested_at timestamptz [not null, default: `now()`]
+  started_at timestamptz
+  completed_at timestamptz
+  lease_expires_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (organisation_id, requested_at, id) [name: 'ix_analysis_jobs_organisation_requested_at', note: 'requested_at and id are DESC']
+    (organisation_id, status, requested_at, id) [name: 'ix_analysis_jobs_organisation_status_requested_at', note: 'requested_at and id are DESC']
+    (organisation_id, dataset_id, requested_at, id) [name: 'ix_analysis_jobs_organisation_dataset_requested_at', note: 'requested_at and id are DESC']
+    (lease_expires_at) [name: 'ix_analysis_jobs_lease_expires_at', note: 'Partial index where lease_expires_at IS NOT NULL']
+  }
+}
+
+Table analysis_results {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  organisation_id uuid [not null]
+  job_id uuid [not null]
+  dataset_id uuid [not null]
+  dataset_checksum_sha256 text
+  algorithm_version text [not null]
+  result_schema_version text [not null]
+  results jsonb [not null]
+  provenance jsonb [not null, default: `'{}'::jsonb`]
+  created_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (job_id) [unique, name: 'uq_analysis_results_job_id']
+    (organisation_id, dataset_id, created_at, id) [name: 'ix_analysis_results_organisation_dataset_created_at', note: 'created_at and id are DESC']
+  }
+}
+
+Table outbox_events {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  organisation_id uuid
+  event_type text [not null]
+  aggregate_type text [not null]
+  aggregate_id uuid [not null]
+  payload jsonb [not null, default: `'{}'::jsonb`]
+  created_at timestamptz [not null, default: `now()`]
+  published_at timestamptz
+  attempt_count integer [not null, default: 0]
+  next_attempt_at timestamptz
+  last_error_code text
+
+  indexes {
+    (created_at) [name: 'ix_outbox_events_pending', note: 'Partial index where published_at IS NULL']
+  }
+}
+
+Table idempotency_keys {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  organisation_id uuid [not null]
+  user_id uuid [not null]
+  operation text [not null]
+  key text [not null]
+  request_hash text [not null]
+  response_status integer
+  response_body jsonb
+  resource_id uuid
+  created_at timestamptz [not null, default: `now()`]
+  expires_at timestamptz [not null]
+
+  indexes {
+    (organisation_id, user_id, operation, key) [unique, name: 'uq_idempotency_keys_scope']
+    (expires_at) [name: 'ix_idempotency_keys_expires_at']
+  }
+}
+
+Table audit_events {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  organisation_id uuid
+  actor_user_id uuid
+  action text [not null]
+  resource_type text [not null]
+  resource_id uuid
+  request_id text
+  metadata jsonb [not null, default: `'{}'::jsonb`]
+  created_at timestamptz [not null, default: `now()`]
+
+  indexes {
+    (organisation_id, created_at, id) [name: 'ix_audit_events_organisation_created_at', note: 'created_at and id are DESC']
+    (resource_type, resource_id) [name: 'ix_audit_events_resource']
+  }
+}
+
+Table schema_migrations {
+  version text [pk, not null]
+  checksum text [not null]
+  applied_at timestamptz [not null, default: `now()`]
+
+  Note: 'Operational migration ledger; not part of the application domain.'
+}
+
+Ref: memberships.organisation_id > organisations.id [delete: cascade]
+Ref: memberships.user_id > users.id [delete: cascade]
+Ref: studies.organisation_id > organisations.id
+Ref: studies.created_by > users.id
+Ref: datasets.(organisation_id, study_id) > studies.(organisation_id, id)
+Ref: datasets.uploaded_by > users.id
+Ref: upload_sessions.(organisation_id, dataset_id) > datasets.(organisation_id, id)
+Ref: upload_sessions.created_by > users.id
+Ref: analysis_jobs.(organisation_id, dataset_id) > datasets.(organisation_id, id)
+Ref: analysis_jobs.requested_by > users.id
+Ref: analysis_results.organisation_id > organisations.id
+Ref: analysis_results.job_id > analysis_jobs.id
+Ref: analysis_results.(organisation_id, dataset_id) > datasets.(organisation_id, id)
+Ref: outbox_events.organisation_id > organisations.id
+Ref: idempotency_keys.organisation_id > organisations.id
+Ref: idempotency_keys.user_id > users.id
+Ref: audit_events.organisation_id > organisations.id
+Ref: audit_events.actor_user_id > users.id

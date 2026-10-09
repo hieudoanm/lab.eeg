@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="96" fill="#1e293b"/>
+  
+  <g transform="translate(256, 256)" stroke="#3b82f6" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Three parallel EEG waveforms -->
+    <path d="M-180,-40 C-150,-80 -120,0 -90,-40 C-60,-80 -30,0 0,-40 C30,-80 60,0 90,-40 C120,-80 150,0 180,-40"/>
+    <path d="M-180,0  C-150,-40 -120,40 -90,0  C-60,-40 -30,40 0,0  C30,-40 60,40 90,0  C120,-40 150,40 180,0"/>
+    <path d="M-180,40 C-150,0   -120,80 -90,40 C-60,0   -30,80 0,40  C30,0   60,80 90,40  C120,0   150,80 180,40"/>
+  </g>
+</svg>

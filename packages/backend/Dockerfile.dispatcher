@@ -1,0 +1,37 @@
+# Dispatcher Dockerfile
+# Runs the outbox dispatcher as a one-shot job
+
+FROM python:3.15-slim AS builder
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
+
+COPY packages/backend/pyproject.toml packages/backend/uv.lock ./
+
+RUN uv sync --frozen --no-dev
+
+FROM python:3.15-slim AS runtime
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
+COPY --from=builder /app/.venv /app/.venv
+
+COPY packages/backend/app ./app
+
+RUN useradd --no-create-home --uid 1000 appuser && \
+    chown -R appuser:appuser /app
+USER appuser
+
+# Run dispatcher (batch mode, exits after processing)
+CMD ["/app/.venv/bin/python", "-m", "app.workers.outbox_dispatcher", "--batch-size=100", "--max-batches=20"]

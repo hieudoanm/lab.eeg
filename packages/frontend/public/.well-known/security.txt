@@ -1,0 +1,12 @@
+# Security.txt for EEG Lab
+# https://securitytxt.org/
+
+Contact: mailto:security@eeg-lab.example.com
+Contact: https://eeg-lab.example.com/security
+Expires: 2027-12-31T23:59:59.000Z
+Encryption: https://eeg-lab.example.com/.well-known/pgp-key.txt
+Acknowledgments: https://eeg-lab.example.com/security/hall-of-fame
+Preferred-Languages: en
+Canonical: https://eeg-lab.example.com/.well-known/security.txt
+Policy: https://eeg-lab.example.com/security/policy
+Hiring: https://eeg-lab.example.com/careers

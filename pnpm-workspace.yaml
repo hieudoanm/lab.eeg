@@ -1,0 +1,9 @@
+packages:
+  - 'packages/*'
+
+allowBuilds:
+  esbuild: true
+  sharp: false
+  unrs-resolver: false
+
+minimumReleaseAge: 0

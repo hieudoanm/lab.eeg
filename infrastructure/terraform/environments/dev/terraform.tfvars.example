@@ -1,0 +1,26 @@
+# Development Environment Variables
+# Copy to terraform.tfvars and fill in values
+
+project_id       = "your-gcp-project-id"
+project_number   = "123456789012"
+region           = "us-central1"
+environment      = "dev"
+github_org       = "your-github-org"
+github_repo      = "your-github-org/eeg-lab"
+
+# Auth
+auth_mode        = "development"
+
+# Secrets (generate secure values)
+# auth_token_secret = "your-32-char-minimum-secret-key-here"
+# db_password       = "generated-by-cloud-sql-if-using-iam"
+# redis_auth        = "generated-by-memorystore"
+
+# Docker images (built by Cloud Build)
+api_image        = "gcr.io/your-gcp-project-id/eeg-lab-api:latest"
+worker_image     = "gcr.io/your-gcp-project-id/eeg-lab-worker:latest"
+frontend_image   = "gcr.io/your-gcp-project-id/eeg-lab-frontend:latest"
+dispatcher_image = "gcr.io/your-gcp-project-id/eeg-lab-dispatcher:latest"
+
+# Notification channels (create in Cloud Monitoring first)
+# notification_channels = ["projects/your-project/notificationChannels/123456"]

@@ -1,0 +1,186 @@
+erDiagram
+
+    users {
+        PK UUID id
+        TEXT identity_provider
+        TEXT external_subject
+        TEXT email
+        TEXT display_name
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+        TIMESTAMPTZ disabled_at
+        UK EXTERNAL_SUBJECT) (identity_provider,
+    }
+
+    organisations {
+        PK UUID id
+        TEXT name
+        TEXT slug
+        TEXT status
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+    }
+
+    memberships {
+        PK UUID id
+        UUID organisation_id
+        UUID user_id
+        TEXT role
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+        UK USER_ID) (organisation_id,
+        UK ID) (organisation_id,
+    }
+
+    studies {
+        PK UUID id
+        UUID organisation_id
+        TEXT name
+        TEXT description
+        TEXT status
+        UUID created_by
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+        TIMESTAMPTZ archived_at
+        UK ID) (organisation_id,
+        CREATED_AT, (organisation_id,
+        STATUS, (organisation_id,
+    }
+
+    datasets {
+        PK UUID id
+        UUID organisation_id
+        UUID study_id
+        TEXT name
+        TEXT description
+        TEXT status
+        TEXT format
+        TEXT storage_key
+        TEXT object_version
+        TEXT checksum_sha256
+        BIGINT file_size_bytes
+        FLOAT8 sampling_frequency_hz
+        INTEGER channel_count
+        BIGINT sample_count
+        FLOAT8 duration_seconds
+        JSONB channel_names
+        JSONB channel_units
+        JSONB metadata
+        JSONB validation_report
+        TEXT source_description
+        UUID uploaded_by
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+        TIMESTAMPTZ validated_at
+        TIMESTAMPTZ archived_at
+        UK ID) (organisation_id,
+        STUDY_ID, (organisation_id,
+        STATUS, (organisation_id,
+    }
+
+    upload_sessions {
+        PK UUID id
+        UUID organisation_id
+        UUID dataset_id
+        UUID created_by
+        TEXT status
+        TEXT object_key
+        BIGINT expected_size_bytes
+        TEXT expected_checksum_sha256
+        TIMESTAMPTZ expires_at
+        TIMESTAMPTZ finalised_at
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+        JSONB manifest
+        STATUS, (organisation_id,
+        DATASET_ID) (organisation_id,
+    }
+
+    analysis_jobs {
+        PK UUID id
+        UUID organisation_id
+        UUID dataset_id
+        UUID requested_by
+        TEXT analysis_type
+        TEXT algorithm_version
+        JSONB parameters
+        TEXT status
+        INTEGER attempt_count
+        INTEGER max_attempts
+        TEXT error_code
+        TEXT error_message
+        TEXT idempotency_key
+        TIMESTAMPTZ requested_at
+        TIMESTAMPTZ started_at
+        TIMESTAMPTZ completed_at
+        TIMESTAMPTZ lease_expires_at
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ updated_at
+        REQUESTED_AT, (organisation_id,
+        STATUS, (organisation_id,
+        DATASET_ID, (organisation_id,
+    }
+
+    analysis_results {
+        PK UUID id
+        UUID organisation_id
+        UUID job_id
+        UUID dataset_id
+        TEXT dataset_checksum_sha256
+        TEXT algorithm_version
+        TEXT result_schema_version
+        JSONB results
+        JSONB provenance
+        TIMESTAMPTZ created_at
+        DATASET_ID, (organisation_id,
+    }
+
+    outbox_events {
+        PK UUID id
+        UUID organisation_id
+        TEXT event_type
+        TEXT aggregate_type
+        UUID aggregate_id
+        JSONB payload
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ published_at
+        INTEGER attempt_count
+        TIMESTAMPTZ next_attempt_at
+        TEXT last_error_code
+    }
+
+    idempotency_keys {
+        PK UUID id
+        UUID organisation_id
+        UUID user_id
+        TEXT operation
+        TEXT key
+        TEXT request_hash
+        INTEGER response_status
+        JSONB response_body
+        UUID resource_id
+        TIMESTAMPTZ created_at
+        TIMESTAMPTZ expires_at
+        UK USER_ID, (organisation_id,
+    }
+
+    audit_events {
+        PK UUID id
+        UUID organisation_id
+        UUID actor_user_id
+        TEXT action
+        TEXT resource_type
+        UUID resource_id
+        TEXT request_id
+        JSONB metadata
+        TIMESTAMPTZ created_at
+        CREATED_AT, (organisation_id,
+        RESOURCE_ID) (resource_type,
+    }
+
+    schema_migrations {
+        PK TEXT version
+        TEXT checksum
+        TIMESTAMPTZ applied_at
+    }
+

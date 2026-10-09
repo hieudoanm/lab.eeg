@@ -1,0 +1,46 @@
+{
+  "name": "@eeg-lab/workspace",
+  "description": "EEG Lab",
+  "author": {
+    "name": "Hieu Doan",
+    "email": "hieumdoan@gmail.com",
+    "url": "https://hieumdoan.github.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hieudoanm/eeg-lab"
+  },
+  "keywords": [
+    "eeg",
+    "lab"
+  ],
+  "license": "MIT",
+  "private": true,
+  "packageManager": "pnpm@12.15.0",
+  "engines": {
+    "node": "26.12.1"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @eeg-lab/web dev",
+    "build": "pnpm --filter @eeg-lab/web build",
+    "lint": "pnpm --filter @eeg-lab/web lint",
+    "typecheck": "pnpm --filter @eeg-lab/web typecheck",
+    "test": "pnpm --filter @eeg-lab/web test",
+    "test:e2e": "pnpm --filter @eeg-lab/web test:e2e",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "9.1.7",
+    "lint-staged": "17.6.0"
+  },
+  "lint-staged": {
+    "packages/backend/**/*.py": [
+      "uv run --directory packages/backend ruff check --fix",
+      "uv run --directory packages/backend ruff format"
+    ],
+    "packages/frontend/**/*.{js,jsx,ts,tsx}": [
+      "pnpm --dir packages/frontend exec eslint --fix",
+      "pnpm --dir packages/frontend exec prettier --write"
+    ]
+  }
+}
