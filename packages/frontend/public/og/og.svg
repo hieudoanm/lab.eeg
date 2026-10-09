@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#1e293b"/>
+  
+  <!-- Subtle grid pattern -->
+  <defs>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#334155" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.15"/>
+  
+  <!-- All content centered at 600, 315 -->
+  <g transform="translate(600, 315)" font-family="system-ui, -apple-system, sans-serif" text-anchor="middle">
+    <!-- Title -->
+    <text x="0" y="-90" font-size="56" font-weight="700" fill="white" letter-spacing="-0.02em">EEG Lab</text>
+    
+    <!-- Tagline -->
+    <text x="0" y="-35" font-size="24" font-weight="400" fill="#94a3b8">EEG Research Platform for Neuroscience</text>
+    
+    <!-- Feature tags -->
+    <g font-size="16" font-weight="500">
+      <g transform="translate(0, 20)">
+        <!-- Feature 1 -->
+        <rect x="-280" y="-18" rx="8" width="170" height="36" fill="#3b82f6" opacity="0.2" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="-195" y="6" fill="#3b82f6">Studies and Datasets</text>
+        
+        <!-- Feature 2 -->
+        <rect x="-55" y="-18" rx="8" width="110" height="36" fill="#8b5cf6" opacity="0.2" stroke="#8b5cf6" stroke-width="1.5"/>
+        <text x="0" y="6" fill="#8b5cf6">Signal View</text>
+        
+        <!-- Feature 3 -->
+        <rect x="115" y="-18" rx="8" width="170" height="36" fill="#10b981" opacity="0.2" stroke="#10b981" stroke-width="1.5"/>
+        <text x="200" y="6" fill="#10b981">Async Analyses</text>
+      </g>
+    </g>
+    
+    <!-- Description -->
+    <text x="0" y="90" font-size="18" font-weight="400" fill="#64748b" style="max-width: 800px;">Organise EEG studies, visualise neural signals, run descriptive analyses - all with tenant isolation</text>
+    
+    <!-- Tech badges -->
+    <g font-size="13" font-weight="500" transform="translate(0, 140)">
+      <rect x="-180" y="-12" rx="6" width="70" height="24" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="-145" y="3" fill="#94a3b8">Next.js 16</text>
+      
+      <rect x="-100" y="-12" rx="6" width="60" height="24" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="-70" y="3" fill="#94a3b8">FastAPI</text>
+      
+      <rect x="-30" y="-12" rx="6" width="70" height="24" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="5" y="3" fill="#94a3b8">PostgreSQL</text>
+      
+      <rect x="50" y="-12" rx="6" width="60" height="24" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="80" y="3" fill="#94a3b8">Plotly.js</text>
+      
+      <rect x="120" y="-12" rx="6" width="70" height="24" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+      <text x="155" y="3" fill="#94a3b8">tRPC</text>
+    </g>
+    
+    <!-- URL -->
+    <text x="0" y="195" font-size="16" font-weight="500" fill="#475569">eeg-lab.example.com</text>
+  </g>
+</svg>

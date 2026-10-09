@@ -1,0 +1,249 @@
+@import 'tailwindcss';
+
+@plugin 'daisyui' {
+  themes: false;
+  logs: false;
+}
+
+/*
+ * Lab design system — dual themes.
+ *
+ * Every Lab application ships the same two daisyUI themes: `lab-light` and
+ * `lab-dark`. `lab-light` is the default and the page follows the user's
+ * system preference automatically (`lab-dark` is marked `prefersdark`).
+ * A theme toggle in the UI sets an explicit `data-theme` attribute on the
+ * root element and persists the choice in localStorage (`lab-theme`).
+ *
+ * The values here mirror the `--color-*` semantic tokens below so daisyUI
+ * components (btn, input, badge, alert, table, …) inherit the same palette,
+ * contrast, and corner radii. Keep the two blocks in sync when the palette
+ * changes.
+ */
+@plugin 'daisyui/theme' {
+  name: 'lab-light';
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: #ffffff;
+  --color-base-200: #eef2f7;
+  --color-base-300: #dce3ec;
+  --color-base-content: #172033;
+
+  --color-primary: #4059c7;
+  --color-primary-content: #ffffff;
+  --color-secondary: #5b6578;
+  --color-secondary-content: #ffffff;
+  --color-accent: #4059c7;
+  --color-accent-content: #ffffff;
+  --color-neutral: #172033;
+  --color-neutral-content: #ffffff;
+  --color-info: #175cd3;
+  --color-info-content: #ffffff;
+  --color-success: #18794e;
+  --color-success-content: #ffffff;
+  --color-warning: #986500;
+  --color-warning-content: #ffffff;
+  --color-error: #b42318;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 9999rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.625rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@plugin 'daisyui/theme' {
+  name: 'lab-dark';
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: #121821;
+  --color-base-200: #1a2230;
+  --color-base-300: #263244;
+  --color-base-content: #e6edf5;
+
+  --color-primary: #4c8dff;
+  --color-primary-content: #0b0f14;
+  --color-secondary: #9ba9bc;
+  --color-secondary-content: #0b0f14;
+  --color-accent: #4c8dff;
+  --color-accent-content: #0b0f14;
+  --color-neutral: #212b3a;
+  --color-neutral-content: #e6edf5;
+  --color-info: #58a6ff;
+  --color-info-content: #0b0f14;
+  --color-success: #3fb950;
+  --color-success-content: #0b0f14;
+  --color-warning: #d9a441;
+  --color-warning-content: #0b0f14;
+  --color-error: #f0554d;
+  --color-error-content: #0b0f14;
+
+  --radius-selector: 999px;
+  --radius-field: 6px;
+  --radius-box: 8px;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/*
+ * Lab design tokens (docs/09-design.md §4).
+ * Token names map to Tailwind utilities, e.g. `--color-surface` -> `bg-surface`.
+ * The daisyUI `base-*`/`primary` names are added alongside so components can use
+ * either the daisyUI semantic utilities (bg-base-100, text-base-content, …) or
+ * the Lab token utilities (bg-surface, text-text-primary, …).
+ *
+ * The values here are the light defaults. The `[data-theme="lab-dark"]` block
+ * below re-declares the same token names with dark values, so the identical
+ * utility classes adapt to the active theme.
+ */
+@theme {
+  --color-base-100: #ffffff;
+  --color-base-200: #eef2f7;
+  --color-base-300: #dce3ec;
+  --color-base-content: #172033;
+
+  --color-primary: #4059c7;
+  --color-primary-content: #ffffff;
+
+  --color-background: #f6f8fb;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef2f7;
+  --color-surface-raised: #e2e8f0;
+  --color-overlay-scrim: #17203366;
+  --color-text-primary: #172033;
+  --color-text-secondary: #5b6578;
+  --color-text-muted: #8a94a6;
+  --color-border: #dce3ec;
+  --color-border-strong: #c3cdd9;
+  --color-accent: #4059c7;
+  --color-accent-hover: #3146a5;
+  --color-accent-muted: #e8ecfb;
+  --color-success: #18794e;
+  --color-success-muted: #e1f4ec;
+  --color-warning: #986500;
+  --color-warning-muted: #fbf0de;
+  --color-danger: #b42318;
+  --color-danger-muted: #fbeae9;
+  --color-error: #b42318;
+  --color-info: #175cd3;
+  --color-info-muted: #e7eefc;
+  --color-neutral-state: #8a94a6;
+  --color-canvas: #eef2f7;
+  --color-focus-ring: #4059c7;
+
+  /* EEG trace palette used by the Signal Explorer and time-series charts. */
+  --color-trace-1: #4059c7;
+  --color-trace-2: #175cd3;
+  --color-trace-3: #18794e;
+  --color-trace-4: #986500;
+  --color-trace-5: #b42318;
+  --color-trace-6: #7c3aed;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-pill: 999px;
+  --radius-card: 0.625rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.625rem;
+
+  --shadow-elevation-1: 0 1px 2px rgba(23, 32, 51, 0.06);
+  --shadow-elevation-2: 0 8px 24px rgba(23, 32, 51, 0.12);
+  --shadow-elevation-3: 0 16px 48px rgba(23, 32, 51, 0.16);
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/*
+ * Dark override for the Lab tokens.
+ * Applied whenever `[data-theme="lab-dark"]` is set on the root element by the
+ * theme toggle. Unlayered so it wins over the `@theme` light defaults.
+ */
+[data-theme='lab-dark'] {
+  color-scheme: dark;
+  --color-base-100: #121821;
+  --color-base-200: #1a2230;
+  --color-base-300: #263244;
+  --color-base-content: #e6edf5;
+
+  --color-primary: #4c8dff;
+  --color-primary-content: #0b0f14;
+
+  --color-background: #0b0f14;
+  --color-surface: #121821;
+  --color-surface-muted: #1a2230;
+  --color-surface-raised: #212b3a;
+  --color-overlay-scrim: #05080b;
+  --color-text-primary: #e6edf5;
+  --color-text-secondary: #9ba9bc;
+  --color-text-muted: #6b7a90;
+  --color-border: #263244;
+  --color-border-strong: #35455c;
+  --color-accent: #4c8dff;
+  --color-accent-hover: #6ba1ff;
+  --color-accent-muted: #1c3355;
+  --color-success: #3fb950;
+  --color-success-muted: #16301f;
+  --color-warning: #d9a441;
+  --color-warning-muted: #33290f;
+  --color-danger: #f0554d;
+  --color-danger-muted: #3a1c1a;
+  --color-error: #f0554d;
+  --color-info: #58a6ff;
+  --color-info-muted: #16283f;
+  --color-neutral-state: #5b6578;
+  --color-canvas: #05080b;
+  --color-focus-ring: #7fb2ff;
+
+  --shadow-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-elevation-2: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-elevation-3: 0 16px 48px rgba(0, 0, 0, 0.55);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
