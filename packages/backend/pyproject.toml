@@ -11,7 +11,7 @@ dependencies = [
     "prometheus-client==0.26.0",
     "psycopg[binary,pool]==3.3.6",
     "pydantic==2.14.1",
-    "pydantic-settings==2.16.0",
+    "pydantic-settings==2.16.1",
     "pyjwt==2.15.1",
     "uvicorn[standard]==0.54.0",
 ]
