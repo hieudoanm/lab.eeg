@@ -244,7 +244,7 @@ jobs:
           targets: ${{ matrix.rust-targets }}
 
       - name: Rust cache
-        uses: Swatinem/rust-cache@v2.9.2
+        uses: Swatinem/rust-cache@v2.9.3
         with:
           workdir: packages/frontend/src-tauri
 
