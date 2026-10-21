@@ -2,7 +2,7 @@
 # Next.js standalone output for minimal image
 
 # Stage 1: Install dependencies
-FROM node:26.12.0-alpine AS deps
+FROM node:26.12.1-alpine AS deps
 WORKDIR /app
 
 RUN npm install --global pnpm@11.7.0
@@ -12,7 +12,7 @@ COPY packages/frontend/package.json packages/frontend/package.json
 RUN pnpm install --frozen-lockfile --filter @eeg-lab/web...
 
 # Stage 2: Build
-FROM node:26.12.0-alpine AS builder
+FROM node:26.12.1-alpine AS builder
 WORKDIR /app
 
 RUN npm install --global pnpm@11.7.0
@@ -28,7 +28,7 @@ ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
 RUN pnpm --filter @eeg-lab/web build
 
 # Stage 3: Runtime
-FROM node:26.12.0-alpine AS runner
+FROM node:26.12.1-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
