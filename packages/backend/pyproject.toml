@@ -3,7 +3,7 @@ name = "eeg-lab-api"
 version = "0.1.0"
 description = "EEG Lab REST API and background analysis worker"
 readme = "README.md"
-requires-python = "==3.15.0"
+requires-python = "==3.15.1"
 dependencies = [
     "celery[redis]==5.6.3",
     "fastapi==0.157.0",
