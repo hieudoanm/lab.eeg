@@ -137,7 +137,7 @@ steps:
   # Deploy Terraform (dev environment on master branch)
   # ---------------------------------------------------------------------------
 
-  - name: 'hashicorp/terraform:1.16'
+  - name: 'hashicorp/terraform:1.17'
     id: 'terraform-dev-plan'
     entrypoint: 'bash'
     args:
@@ -159,7 +159,7 @@ steps:
     secretEnv: ['AUTH_TOKEN_SECRET', 'DB_PASSWORD', 'REDIS_AUTH']
     waitFor: ['push-images', 'backend-tests', 'frontend-tests']
 
-  - name: 'hashicorp/terraform:1.16'
+  - name: 'hashicorp/terraform:1.17'
     id: 'terraform-dev-apply'
     entrypoint: 'bash'
     args:
@@ -173,7 +173,7 @@ steps:
   # Deploy Terraform (prod environment on tags)
   # ---------------------------------------------------------------------------
 
-  - name: 'hashicorp/terraform:1.16'
+  - name: 'hashicorp/terraform:1.17'
     id: 'terraform-prod-plan'
     entrypoint: 'bash'
     args:
@@ -197,7 +197,7 @@ steps:
       ['AUTH_TOKEN_SECRET', 'DB_PASSWORD', 'REDIS_AUTH', 'OIDC_CLIENT_SECRET']
     waitFor: ['push-images', 'backend-tests', 'frontend-tests']
 
-  - name: 'hashicorp/terraform:1.16'
+  - name: 'hashicorp/terraform:1.17'
     id: 'terraform-prod-apply'
     entrypoint: 'bash'
     args:
