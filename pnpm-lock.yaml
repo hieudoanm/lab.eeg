@@ -200,8 +200,8 @@ importers:
         specifier: 5.6.0
         version: 5.6.0(@babel/core@7.29.7(supports-color@8.1.1))(esbuild@0.28.2)(lightningcss@1.33.0)(next@16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@playwright/test@1.64.1)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(postcss@8.5.29)(supports-color@8.1.1)(webpack@5.111.1(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.29)(sharp@0.35.5(@types/node@26.6.6)))
       plotly.js-dist:
-        specifier: 4.1.2
-        version: 4.1.2
+        specifier: 4.2.0
+        version: 4.2.0
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -3676,8 +3676,8 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  plotly.js-dist@4.1.2:
-    resolution: {integrity: sha512-QLtJFLtEB6QT8uhpkEBjY1LEiyaPFE9Wi+jQPpmqbMs+sGKIfB9OPXv51EQAyk8Z/NH9RxDMpA/ueLJnXR7NEg==}
+  plotly.js-dist@4.2.0:
+    resolution: {integrity: sha512-Hb6GYjc+2KEgzpSLCWgHdt4kZX9RyBTig6qqitDCk69OLsxUWHL0I3nBn61gRhldZyHVx0FC85Mvyu2vszbx7A==}
 
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
@@ -7936,7 +7936,7 @@ snapshots:
     dependencies:
       playwright-core: 1.64.1
 
-  plotly.js-dist@4.1.2: {}
+  plotly.js-dist@4.2.0: {}
 
   possible-typed-array-names@1.1.0: {}
 
