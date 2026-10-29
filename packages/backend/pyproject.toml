@@ -10,7 +10,7 @@ dependencies = [
     "numpy==2.5.4",
     "prometheus-client==0.26.0",
     "psycopg[binary,pool]==3.3.6",
-    "pydantic==2.14.1",
+    "pydantic==2.14.2",
     "pydantic-settings==2.16.2",
     "pyjwt==2.15.1",
     "uvicorn[standard]==0.54.0",
