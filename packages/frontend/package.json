@@ -19,7 +19,7 @@
     "tauri:icon": "tauri icon"
   },
   "dependencies": {
-    "@tanstack/react-query": "5.105.1",
+    "@tanstack/react-query": "5.105.3",
     "@tauri-apps/api": "2.12.4",
     "@trpc/client": "11.23.0",
     "@trpc/react-query": "11.23.0",
