@@ -5,7 +5,7 @@ description = "EEG Lab REST API and background analysis worker"
 readme = "README.md"
 requires-python = "==3.15.2"
 dependencies = [
-    "celery[redis]==5.6.3",
+    "celery[redis]==5.7.0",
     "fastapi==0.162.0",
     "numpy==2.5.4",
     "prometheus-client==0.26.0",
