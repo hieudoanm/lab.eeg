@@ -9,6 +9,6 @@ neuro-core = { path = "../neuro-core" }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
-nifti = { version = "0.18", features = ["nalgebra_affine", "ndarray_volumes"] }
-ndarray = "0.17.2"
-zune-jpeg = "0.4"
+nifti = { version = "=0.18.0", features = ["nalgebra_affine", "ndarray_volumes"] }
+ndarray = "=0.17.2"
+zune-jpeg = "=0.4.21"
