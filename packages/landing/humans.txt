@@ -1,0 +1,9 @@
+/* TEAM */
+Project: Neuro Lab — Local EEG, MEG, and MRI workbench
+Site: https://hieudoanm.github.io/neuro.lab/
+Source: https://github.com/hieudoanm/neuro.lab
+
+/* SITE */
+Last update: 2026/11/08
+Language: English
+Doctype: HTML5

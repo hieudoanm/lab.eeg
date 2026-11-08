@@ -1,0 +1,13 @@
+{
+  "name": "neuro-lab",
+  "private": true,
+  "packageManager": "pnpm@10.18.0",
+  "scripts": {
+    "dev": "pnpm --filter @neuro-lab/desktop dev",
+    "build": "pnpm --filter @neuro-lab/desktop build",
+    "typecheck": "pnpm --filter @neuro-lab/desktop typecheck",
+    "test": "pnpm --filter @neuro-lab/desktop test",
+    "tauri:dev": "pnpm --filter @neuro-lab/desktop tauri:dev",
+    "tauri:build": "pnpm --filter @neuro-lab/desktop tauri:build"
+  }
+}

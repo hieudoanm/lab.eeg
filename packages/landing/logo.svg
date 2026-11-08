@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="64" fill="#ffffff"/>
+
+  <!-- Neural net: centre node joined to six modality nodes -->
+  <g stroke="#000000" stroke-width="6" opacity="0.45">
+    <line x1="256" y1="256" x2="256" y2="120"/>
+    <line x1="256" y1="256" x2="378" y2="188"/>
+    <line x1="256" y1="256" x2="378" y2="324"/>
+    <line x1="256" y1="256" x2="256" y2="392"/>
+    <line x1="256" y1="256" x2="134" y2="324"/>
+    <line x1="256" y1="256" x2="134" y2="188"/>
+  </g>
+
+  <!-- Outer nodes -->
+  <g fill="#000000" opacity="0.8">
+    <circle cx="256" cy="120" r="26"/>
+    <circle cx="378" cy="188" r="26"/>
+    <circle cx="378" cy="324" r="26"/>
+    <circle cx="256" cy="392" r="26"/>
+    <circle cx="134" cy="324" r="26"/>
+    <circle cx="134" cy="188" r="26"/>
+  </g>
+
+  <!-- Centre node -->
+  <circle cx="256" cy="256" r="44" fill="#000000" opacity="0.15"/>
+  <circle cx="256" cy="256" r="26" fill="#000000"/>
+</svg>
