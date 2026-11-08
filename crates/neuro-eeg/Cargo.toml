@@ -11,6 +11,6 @@ serde_json.workspace = true
 thiserror.workspace = true
 sha2.workspace = true
 hex.workspace = true
-ndarray = "0.17"
-ndarray-npy = "0.10"
-rustfft = "6.4"
+ndarray = "=0.17.2"
+ndarray-npy = "=0.10.0"
+rustfft = "=6.4.1"

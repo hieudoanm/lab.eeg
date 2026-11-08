@@ -9,7 +9,7 @@ name = "neuro_lab_desktop_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "=2.7.4", features = [] }
 
 [dependencies]
 neuro-core = { path = "../../../crates/neuro-core" }
@@ -17,9 +17,9 @@ neuro-eeg = { path = "../../../crates/neuro-eeg" }
 neuro-meg = { path = "../../../crates/neuro-meg" }
 neuro-mri = { path = "../../../crates/neuro-mri" }
 neuro-store = { path = "../../../crates/neuro-store" }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-tauri = { version = "2", features = [] }
-thiserror = "2"
-chrono = { version = "0.4", features = ["serde"] }
-uuid = { version = "1", features = ["v4"] }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = "=1.0.154"
+tauri = { version = "=2.12.5", features = [] }
+thiserror = "=2.0.21"
+chrono = { version = "=0.4.45", features = ["serde"] }
+uuid = { version = "=1.29.1", features = ["v4"] }
