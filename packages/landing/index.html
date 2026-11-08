@@ -41,6 +41,7 @@
   <main id="top">
     <section class="hero">
       <div class="container hero-inner">
+        <div class="hero-content">
         <h1>EEG, MEG, and MRI — processed on your own machine.</h1>
         <p class="lede">
           Neuro Lab is a local-first neuroimaging workbench: a Tauri desktop
@@ -56,6 +57,17 @@
           <div><dt>10+</dt><dd>input formats</dd></div>
           <div><dt>0</dt><dd>network calls</dd></div>
         </dl>
+        </div>
+        <figure class="terminal hero-demo">
+          <figcaption>eeg-pipeline.json</figcaption>
+          <pre><code>{
+  <span class="str">"nodes"</span>: [
+    { <span class="str">"type"</span>: <span class="str">"bandpass"</span>, <span class="str">"params"</span>: { <span class="str">"l_freq_hz"</span>: <span class="num">1</span>, <span class="str">"h_freq_hz"</span>: <span class="num">40</span> } },
+    { <span class="str">"type"</span>: <span class="str">"ica"</span>, <span class="str">"params"</span>: { <span class="str">"topographies"</span>: <span class="num">true</span> } },
+    { <span class="str">"type"</span>: <span class="str">"epoch"</span>, <span class="str">"params"</span>: { <span class="str">"tmin_s"</span>: <span class="num">-0.2</span>, <span class="str">"tmax_s"</span>: <span class="num">0.5</span> } }
+  ]
+}</code></pre>
+        </figure>
       </div>
     </section>
 
