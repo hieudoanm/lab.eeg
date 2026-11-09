@@ -93,7 +93,7 @@ pub fn inspect_edf(path: &Path) -> Result<EdfInfo, CoreError> {
             .map_err(|_| CoreError::InvalidInput("invalid EDF samples-per-record".into()))?;
         samples_per_record.push(nr);
     }
-    if samples_per_record.iter().any(|&n| n == 0) {
+    if samples_per_record.contains(&0) {
         return Err(CoreError::InvalidInput("EDF signal has no samples".into()));
     }
     let data_bytes = bytes.len().saturating_sub(header_bytes);

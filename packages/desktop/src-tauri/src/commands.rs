@@ -344,7 +344,7 @@ fn execute_eeg_analysis(
                 dataset_id,
                 "eeg_descriptive",
                 &serde_json::json!({ "sampling_frequency_hz": request.sampling_frequency_hz }),
-                &[artifact.name.clone()],
+                std::slice::from_ref(&artifact.name),
             )?;
             Ok(serde_json::json!({
                 "run": completed,
@@ -471,7 +471,7 @@ fn execute_eeg_pipeline(
                 dataset_id,
                 "eeg_pipeline",
                 &request.pipeline,
-                &[artifact.name.clone()],
+                std::slice::from_ref(&artifact.name),
             )?;
             Ok(serde_json::json!({
                 "run": completed,
@@ -854,7 +854,7 @@ pub fn save_pipeline_preset(
     let preset = workspace
         .save_pipeline_preset(request.name, request.modality, request.steps)
         .map_err(|error| error.to_string())?;
-    Ok(serde_json::to_value(preset).map_err(|error| error.to_string())?)
+    serde_json::to_value(preset).map_err(|error| error.to_string())
 }
 
 #[tauri::command]
@@ -868,7 +868,7 @@ pub fn list_pipeline_presets(
     let presets = workspace
         .list_pipeline_presets()
         .map_err(|error| error.to_string())?;
-    Ok(serde_json::to_value(presets).map_err(|error| error.to_string())?)
+    serde_json::to_value(presets).map_err(|error| error.to_string())
 }
 
 #[tauri::command]
@@ -957,7 +957,7 @@ pub fn convert_dicom_to_nifti(request: DicomConvertRequest) -> Result<serde_json
         .unwrap_or_else(|| input.with_extension("nii.gz"));
     let result =
         neuro_mri::dicom::dicom_to_nifti(&input, &output).map_err(|error| error.to_string())?;
-    Ok(serde_json::to_value(result).map_err(|error| error.to_string())?)
+    serde_json::to_value(result).map_err(|error| error.to_string())
 }
 
 #[tauri::command]
@@ -972,7 +972,7 @@ pub fn convert_dicom_series_to_nifti(
         .unwrap_or_else(|| input.join("series.nii.gz"));
     let result = neuro_mri::dicom::dicom_series_to_nifti(&input, &output)
         .map_err(|error| error.to_string())?;
-    Ok(serde_json::to_value(result).map_err(|error| error.to_string())?)
+    serde_json::to_value(result).map_err(|error| error.to_string())
 }
 
 #[tauri::command]
@@ -1684,7 +1684,7 @@ fn execute_meg_pipeline(
                 dataset_id,
                 "meg_pipeline",
                 &request.pipeline,
-                &[artifact.name.clone()],
+                std::slice::from_ref(&artifact.name),
             )?;
             Ok(serde_json::json!({
                 "run": completed,

@@ -464,7 +464,7 @@ fn eeg_epoch_node_produces_baselined_erp() {
     // samples 100 and 300, plus one artifact epoch with a huge spike.
     let n = 600usize;
     let mut ch0 = vec![0.0f64; n];
-    let mut ch1 = vec![5.0f64; n];
+    let ch1 = vec![5.0f64; n];
     for s in 100..400 {
         ch0[s] += 10.0;
     }

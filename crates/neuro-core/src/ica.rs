@@ -386,7 +386,7 @@ mod tests {
         let model = fastica(&matrix, Some(2), 100, 1e-6).unwrap();
         // Whitening roundtrip: unwhitening @ whitening @ Xc == Xc (rank 2).
         let t = 11usize;
-        let mut z = vec![0.0; 2];
+        let mut z = [0.0; 2];
         for k in 0..2 {
             for ch in 0..3 {
                 z[k] += model.whitening[k][ch] * (matrix[ch][t] - model.mean[ch]);

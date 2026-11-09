@@ -208,7 +208,7 @@ pub fn inspect_brainvision(path: &Path) -> Result<BvInfo, CoreError> {
             "INT_32" => 4,
             _ => unreachable!(),
         };
-        if bytes % (n_channels * value_bytes) != 0 {
+        if !bytes.is_multiple_of(n_channels * value_bytes) {
             return Err(CoreError::InvalidInput(
                 "BrainVision data size does not match header".into(),
             ));

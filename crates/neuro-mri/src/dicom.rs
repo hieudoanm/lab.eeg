@@ -226,7 +226,7 @@ fn rle_decode_plane(data: &[u8], expected: usize) -> Result<Vec<u8>, CoreError> 
                     "RLE replicate run out of bounds".into(),
                 ));
             }
-            out.extend(std::iter::repeat(data[pos]).take(n));
+            out.extend(std::iter::repeat_n(data[pos], n));
             pos += 1;
         }
     }
@@ -421,7 +421,7 @@ fn read_dicom_file(path: &Path) -> Result<DicomImage, CoreError> {
     let pixel_el = find(0x7FE0, 0x0010)
         .ok_or_else(|| CoreError::InvalidInput("DICOM missing Pixel Data".into()))?;
     let n = (rows * cols) as usize;
-    let bytes_per = (bits_allocated as usize + 7) / 8;
+    let bytes_per = (bits_allocated as usize).div_ceil(8);
     let slope = find(0x0028, 0x1053)
         .and_then(|el| parse_decimal_list(value(el)).first().copied())
         .unwrap_or(1.0);
@@ -449,7 +449,7 @@ fn read_dicom_file(path: &Path) -> Result<DicomImage, CoreError> {
             if is_rgb {
                 // Expect RGB triplets; fall back to luma of first channel.
                 if pixels.len() == n * 3 {
-                    for px in pixels.chunks_exact(3) {
+                    for px in pixels.as_chunks::<3>().0 {
                         let y = 0.299 * px[0] as f64 + 0.587 * px[1] as f64 + 0.114 * px[2] as f64;
                         frame.push(if mono1 { 255.0 - y } else { y });
                     }
@@ -464,7 +464,7 @@ fn read_dicom_file(path: &Path) -> Result<DicomImage, CoreError> {
                 }
             } else if pixels.len() == n * 3 {
                 // Decoder expanded grayscale to RGB; take the red channel.
-                for px in pixels.chunks_exact(3) {
+                for px in pixels.as_chunks::<3>().0 {
                     frame.push(if mono1 {
                         255.0 - px[0] as f64
                     } else {

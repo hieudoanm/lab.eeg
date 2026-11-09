@@ -10,7 +10,7 @@ pub fn run() {
             let data_dir = app.path().app_data_dir()?;
             let workspace =
                 neuro_store::LocalWorkspace::open(data_dir.join("workspace")).map_err(|error| {
-                    std::io::Error::new(std::io::ErrorKind::Other, error.to_string())
+                    std::io::Error::other(error.to_string())
                 })?;
             app.manage(workspace::WorkspaceState(std::sync::Mutex::new(workspace)));
             Ok(())

@@ -353,7 +353,7 @@ fn write_kit_trigger_fixture(path: &std::path::Path, nsamp: usize, sfreq: f64) {
     let mut channels = Vec::new();
     for i in 0..2 {
         channels.extend(le_i32(-1)); // CHANNEL_TRIGGER
-        channels.extend(le_i32(i as i32)); // channel_no
+        channels.extend(le_i32(i)); // channel_no
         channels.extend(le_i32(0)); // reserved
         channels.extend(pad_str(&format!("TRIG{:02}", i), 32));
     }
