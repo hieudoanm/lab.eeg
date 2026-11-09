@@ -1,7 +1,7 @@
 {
   "name": "neuro-lab",
   "private": true,
-  "packageManager": "pnpm@10.34.9",
+  "packageManager": "pnpm@12.18.0",
   "scripts": {
     "dev": "pnpm --filter @neuro-lab/desktop dev",
     "build": "pnpm --filter @neuro-lab/desktop build",
