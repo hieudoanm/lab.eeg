@@ -4,9 +4,14 @@ on:
   push:
     branches: [master]
   pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -50,22 +55,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
 
-      - name: Cache pnpm store
-        uses: actions/cache@v6.1.0
-        with:
-          path: ~/.local/share/pnpm/store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: ${{ runner.os }}-pnpm-
-
       - name: Set up pnpm
         uses: pnpm/action-setup@v6.1.1
-        with:
-          version: "12.18.0"
 
       - name: Set up Node.js
         uses: actions/setup-node@v7.1.0
         with:
-          node-version: "26.13.0"
+          node-version-file: .nvmrc
           cache: "pnpm"
 
       - name: Install dependencies
@@ -91,6 +87,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pages: write
       id-token: write
     steps:
@@ -124,13 +121,11 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v6.1.1
-        with:
-          version: "12.18.0"
 
       - name: Set up Node.js
         uses: actions/setup-node@v7.1.0
         with:
-          node-version: "26.13.0"
+          node-version-file: .nvmrc
           cache: "pnpm"
 
       - name: Set up Rust
