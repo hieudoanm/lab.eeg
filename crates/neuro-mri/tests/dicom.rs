@@ -79,10 +79,6 @@ fn dicom_rejects_garbage() {
     std::fs::remove_dir_all(&dir).ok();
 }
 
-fn usv(v: u16) -> [u8; 2] {
-    v.to_le_bytes()
-}
-
 fn build_dicom_multi(frames: u16) -> Vec<u8> {
     let mut file = vec![0u8; 128];
     file.extend_from_slice(b"DICM");

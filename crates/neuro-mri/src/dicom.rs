@@ -441,9 +441,12 @@ fn read_dicom_file(path: &Path) -> Result<DicomImage, CoreError> {
             )));
         }
         for item in items {
-            let pixels = zune_jpeg::JpegDecoder::new(item)
-                .decode()
-                .map_err(|e| CoreError::InvalidInput(format!("DICOM JPEG decode failed: {e}")))?;
+            let pixels =
+                zune_jpeg::JpegDecoder::new(zune_jpeg::zune_core::bytestream::ZCursor::new(item))
+                    .decode()
+                    .map_err(|e| {
+                        CoreError::InvalidInput(format!("DICOM JPEG decode failed: {e}"))
+                    })?;
             let n_out = n * samples_per_pixel as usize;
             let mut frame = Vec::with_capacity(n);
             if is_rgb {

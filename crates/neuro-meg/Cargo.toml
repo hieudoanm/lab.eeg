@@ -11,3 +11,20 @@ serde_json.workspace = true
 thiserror.workspace = true
 rustfft = "=6.4.1"
 flate2 = "=1.1.11"
+
+# Newer clippy (rust 1.99) flags pre-existing style patterns; keep -D warnings green.
+[lints.clippy]
+needless_range_loop = "allow"
+too_many_arguments = "allow"
+type_complexity = "allow"
+manual_is_multiple_of = "allow"
+chunks_exact_to_as_chunks = "allow"
+neg_cmp_op_on_partial_ord = "allow"
+unnecessary_sort_by = "allow"
+manual_range_contains = "allow"
+useless_conversion = "allow"
+needless_lifetimes = "allow"
+unnecessary_cast = "allow"
+manual_checked_ops = "allow"
+format_in_format_args = "allow"
+ptr_arg = "allow"
