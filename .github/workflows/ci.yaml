@@ -154,7 +154,8 @@ jobs:
         uses: actions/upload-artifact@v7.0.2
         with:
           name: tauri-bundles-${{ matrix.os }}
-          path: packages/desktop/src-tauri/target/release/bundle
+          path: target/release/bundle
+          if-no-files-found: error
           retention-days: 7
 
   release:
@@ -176,7 +177,9 @@ jobs:
           path: bundles
 
       - name: List release assets
-        run: find bundles -type f | sort
+        run: |
+          test -d bundles
+          find bundles -type f | sort
 
       - name: Create rolling release
         env:
