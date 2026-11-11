@@ -8,10 +8,8 @@ pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
             let data_dir = app.path().app_data_dir()?;
-            let workspace =
-                neuro_store::LocalWorkspace::open(data_dir.join("workspace")).map_err(|error| {
-                    std::io::Error::other(error.to_string())
-                })?;
+            let workspace = neuro_store::LocalWorkspace::open(data_dir.join("workspace"))
+                .map_err(|error| std::io::Error::other(error.to_string()))?;
             app.manage(workspace::WorkspaceState(std::sync::Mutex::new(workspace)));
             Ok(())
         })

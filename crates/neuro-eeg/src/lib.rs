@@ -282,9 +282,7 @@ fn extract_literal(header: &str, key: &str) -> Option<String> {
     let marker = format!("'{key}': ");
     let start = header.find(&marker)? + marker.len();
     let rest = &header[start..];
-    let end = rest
-        .find([',', '\n', '}'])
-        .unwrap_or(rest.len());
+    let end = rest.find([',', '\n', '}']).unwrap_or(rest.len());
     Some(rest[..end].trim().trim_matches('\'').to_string())
 }
 
@@ -292,9 +290,7 @@ fn extract_dtype(header: &str) -> Option<String> {
     let marker = "'descr': ";
     let start = header.find(marker)? + marker.len();
     let rest = &header[start..];
-    let end = rest
-        .find([',', '\n', '}'])
-        .unwrap_or(rest.len());
+    let end = rest.find([',', '\n', '}']).unwrap_or(rest.len());
     Some(rest[..end].trim().trim_matches('\'').to_string())
 }
 
