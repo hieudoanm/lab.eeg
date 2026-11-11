@@ -155,8 +155,17 @@ jobs:
 
       - name: Zip macOS app bundle
         if: runner.os == 'macOS'
-        working-directory: target/release/bundle/macos
-        run: zip -r "Neuro Lab.app.zip" "Neuro Lab.app"
+        working-directory: target/release/bundle
+        run: |
+          set -e
+          dmg="$(ls dmg/*.dmg | head -n1)"
+          mnt="$(mktemp -d)"
+          hdiutil attach "$dmg" -nobrowse -readonly -mountpoint "$mnt" >/dev/null
+          app="$(find "$mnt" -maxdepth 2 -name '*.app' | head -n1)"
+          test -n "$app"
+          mkdir -p macos
+          ditto -c -k --keepParent "$app" "macos/Neuro Lab.app.zip"
+          hdiutil detach "$mnt" >/dev/null
 
       - name: Build Linux bundles
         if: runner.os == 'Linux'
