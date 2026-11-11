@@ -1,5 +1,5 @@
 {
-  "name": "neuro-lab",
+  "name": "@neuro-lab/workspace",
   "private": true,
   "packageManager": "pnpm@12.18.0",
   "scripts": {
