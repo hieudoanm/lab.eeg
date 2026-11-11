@@ -1,5 +1,8 @@
 # Neuro Lab
 
+[![CI](https://github.com/hieudoanm/neuro.lab/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/hieudoanm/neuro.lab/actions/workflows/ci.yaml?branch=master)  [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+
 Neuro Lab is a local-first desktop workspace for EEG, MEG, and MRI research data. It has no server dependency: the React interface runs inside Tauri and calls typed Rust commands directly. All computation and persistence stay on the local filesystem.
 
 ## Repository layout
