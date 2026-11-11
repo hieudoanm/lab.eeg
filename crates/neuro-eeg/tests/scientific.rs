@@ -1,7 +1,6 @@
 use neuro_eeg::{
     analyze_recording, channel_statistics, describe_npy, read_npy_matrix_f64, synthetic_recording,
 };
-use std::process::Command;
 
 #[test]
 fn statistics_match_population_convention() {
@@ -24,20 +23,23 @@ fn npy_manifest_and_analysis_work_for_float32() {
     std::fs::create_dir_all(&dir).unwrap();
     let npy = dir.join("recording.npy");
     let manifest = dir.join("recording.json");
-    let script = r#"
-import json
-import numpy as np
-np.save('recording.npy', np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]], dtype=np.float32))
-with open('recording.json', 'w') as f:
-    json.dump({'sampling_frequency_hz': 100.0, 'channel_names': ['F3', 'Cz'], 'channel_units': ['uV', 'uV']}, f)
-"#;
-    let status = Command::new("python3")
-        .arg("-c")
-        .arg(script)
-        .current_dir(&dir)
-        .status()
-        .unwrap();
-    assert!(status.success());
+    // Minimal .npy v1.0 fixture: float32 array [[1,2,3],[4,5,6]], no Python needed.
+    let mut header = "{'descr': '<f4', 'fortran_order': False, 'shape': (2, 3), }".to_string();
+    let pad = 64 - ((10 + header.len() + 1) % 64);
+    header.push_str(&" ".repeat(pad));
+    header.push('\n');
+    let mut npy_bytes = b"\x93NUMPY\x01\x00".to_vec();
+    npy_bytes.extend_from_slice(&(header.len() as u16).to_le_bytes());
+    npy_bytes.extend_from_slice(header.as_bytes());
+    for v in [1.0f32, 2.0, 3.0, 4.0, 5.0, 6.0] {
+        npy_bytes.extend_from_slice(&v.to_le_bytes());
+    }
+    std::fs::write(&npy, &npy_bytes).unwrap();
+    std::fs::write(
+        &manifest,
+        r#"{"sampling_frequency_hz": 100.0, "channel_names": ["F3", "Cz"], "channel_units": ["uV", "uV"]}"#,
+    )
+    .unwrap();
 
     let metadata = describe_npy(&npy, 8, 1000, 100.0).unwrap();
     assert_eq!(
