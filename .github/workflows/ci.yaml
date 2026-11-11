@@ -108,14 +108,14 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v5.0.1
 
-  desktop-tauri:
-    name: Desktop - Tauri (${{ matrix.os }})
+  desktop-build:
+    name: Desktop build (${{ matrix.os }})
     needs: [desktop]
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -139,30 +139,72 @@ jobs:
           workspaces: packages/desktop/src-tauri -> target
 
       - name: Install Linux dependencies
-        if: matrix.os == 'ubuntu-latest'
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libglib2.0-dev rpm
 
       - name: Install dependencies
         working-directory: packages/desktop
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      - name: Build Tauri
+      - name: Build macOS bundles
+        if: runner.os == 'macOS'
         working-directory: packages/desktop
-        run: pnpm tauri:build
+        run: pnpm exec tauri build --bundles dmg
 
-      - name: Upload Tauri bundles
+      - name: Zip macOS app bundle
+        if: runner.os == 'macOS'
+        working-directory: target/release/bundle/macos
+        run: zip -r "Neuro Lab.app.zip" "Neuro Lab.app"
+
+      - name: Build Linux bundles
+        if: runner.os == 'Linux'
+        working-directory: packages/desktop
+        run: pnpm exec tauri build --bundles deb,rpm,appimage
+
+      - name: Build Windows bundles
+        if: runner.os == 'Windows'
+        working-directory: packages/desktop
+        run: pnpm exec tauri build --bundles msi,nsis
+
+      - name: Upload macOS artifacts
+        if: runner.os == 'macOS'
         uses: actions/upload-artifact@v7.0.2
         with:
-          name: tauri-bundles-${{ matrix.os }}
-          path: target/release/bundle
+          name: neuro-lab-desktop-macos
+          path: |
+            target/release/bundle/dmg/*.dmg
+            target/release/bundle/macos/Neuro Lab.app.zip
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload Linux artifacts
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: neuro-lab-desktop-linux
+          path: |
+            target/release/bundle/deb/*.deb
+            target/release/bundle/rpm/*.rpm
+            target/release/bundle/appimage/*.AppImage
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload Windows artifacts
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: neuro-lab-desktop-windows
+          path: |
+            target/release/bundle/msi/*.msi
+            target/release/bundle/nsis/*.exe
           if-no-files-found: error
           retention-days: 7
 
   release:
     name: Release
-    needs: [desktop-tauri]
+    needs: [desktop-build]
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
@@ -171,30 +213,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
 
-      - name: Download Tauri bundles
+      - name: Download desktop bundles
         uses: actions/download-artifact@v8.0.2
         with:
-          pattern: tauri-bundles-*
+          pattern: neuro-lab-desktop-*
           merge-multiple: true
-          path: bundles
+          path: dist
 
       - name: List release assets
         run: |
-          test -d bundles
-          find bundles -type f | sort
+          test -d dist
+          find dist -type f | sort
+
+      - name: Delete existing latest release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete latest --yes --cleanup-tag 2>/dev/null || true
+          git push origin :refs/tags/latest || true
 
       - name: Create rolling release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release delete latest --yes --cleanup-tag 2>/dev/null || true
           gh release create latest \
             --title "Neuro Lab (latest)" \
-            --notes "Latest Neuro Lab desktop bundles (Linux, macOS, Windows)." \
+            --notes-file README.md \
             --prerelease=false
 
       - name: Upload bundles to release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          find bundles -type f \( -name '*.dmg' -o -name '*.AppImage' -o -name '*.deb' -o -name '*.rpm' -o -name '*.msi' -o -name '*.exe' -o -name '*.zip' \) -exec gh release upload latest {} --clobber \;
+          find dist -type f \( -name '*.dmg' -o -name '*.AppImage' -o -name '*.deb' -o -name '*.rpm' -o -name '*.msi' -o -name '*.exe' -o -name '*.zip' \) -exec gh release upload latest {} --clobber \;
