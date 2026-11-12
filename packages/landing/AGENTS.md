@@ -55,3 +55,7 @@ opening `index.html`:
 ```bash
 python3 -m http.server 8080 -d packages/landing
 ```
+
+## Conventions
+
+- **Fonts:** Inter (sans) loaded via the Google Fonts `<link>` in `index.html`; mono stack `ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace`. Tokens: `--font-sans` / `--font-mono`. Do not add other typefaces.
