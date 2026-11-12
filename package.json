@@ -1,12 +1,24 @@
 {
   "name": "@neuro-lab/workspace",
+  "version": "0.0.1",
   "private": true,
+  "description": "Neuro Lab",
+  "license": "MIT",
+  "author": {
+    "name": "Hieu Doan",
+    "email": "hieu.doan.professional@gmail.com",
+    "url": "https://hieudoanm.github.io"
+  },
   "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": "26.13.1"
+  },
   "scripts": {
     "dev": "pnpm --filter @neuro-lab/desktop dev",
     "build": "pnpm --filter @neuro-lab/desktop build",
-    "typecheck": "pnpm --filter @neuro-lab/desktop typecheck",
+    "lint": "pnpm --filter @neuro-lab/desktop lint",
     "test": "pnpm --filter @neuro-lab/desktop test",
+    "typecheck": "pnpm --filter @neuro-lab/desktop typecheck",
     "tauri:dev": "pnpm --filter @neuro-lab/desktop tauri:dev",
     "tauri:build": "pnpm --filter @neuro-lab/desktop tauri:build"
   }
