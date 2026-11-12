@@ -45,8 +45,8 @@ jobs:
       - name: Test
         run: cargo test --workspace
 
-  desktop:
-    name: Desktop
+  desktop-check:
+    name: Desktop check
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -69,6 +69,9 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
 
       - name: Test
         run: pnpm test
@@ -110,8 +113,10 @@ jobs:
 
   desktop-build:
     name: Desktop build (${{ matrix.os }})
-    needs: [desktop]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: [desktop-check]
+    # Release bundles are only needed for the master-branch release job;
+    # PRs are covered by the `desktop-check` job.
+    if: github.event_name != 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -147,18 +152,6 @@ jobs:
       - name: Install dependencies
         working-directory: packages/desktop
         run: pnpm install --frozen-lockfile
-
-      - name: Typecheck
-        working-directory: packages/desktop
-        run: pnpm run typecheck
-
-      - name: Lint
-        working-directory: packages/desktop
-        run: pnpm run lint
-
-      - name: Test
-        working-directory: packages/desktop
-        run: pnpm run test
 
       - name: Build macOS bundles
         if: runner.os == 'macOS'
@@ -226,7 +219,7 @@ jobs:
   release:
     name: Release
     needs: [desktop-build]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
       contents: write
