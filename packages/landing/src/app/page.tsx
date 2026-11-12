@@ -151,7 +151,7 @@ const HomePage: NextPage = () => (
         { value: '10+', label: 'input formats' },
         { value: '0', label: 'network calls' },
       ]}>
-      <Terminal caption="eeg-pipeline.json" lines={PIPELINE_JSON} />
+      <Terminal lines={PIPELINE_JSON} />
     </Hero>
 
     <Features
@@ -170,7 +170,6 @@ const HomePage: NextPage = () => (
           {DEMO_TERMINALS.map((t) => (
             <Terminal
               key={t.caption}
-              caption={t.caption}
               lines={t.lines}
               className={t.wide ? 'lg:col-span-2' : ''}
             />
@@ -199,7 +198,7 @@ const HomePage: NextPage = () => (
           title="Build from source"
           description="Requires Node.js + pnpm and Rust. Everything compiles locally — there is no backend service to deploy."
         />
-        <Terminal caption="Install and run" lines={INSTALL_LINES} />
+        <Terminal lines={INSTALL_LINES} />
         <p className="text-base-content/60 mt-6 text-center text-sm">
           See the{' '}
           <a
