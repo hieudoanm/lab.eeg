@@ -245,15 +245,16 @@ neuro-store  workspace persistence</code></pre>
 
   <footer class="footer">
     <div class="container footer-inner">
-      <span>© 2026 Neuro Lab</span>
+      <span>© <span id="year">2026</span> neuro.lab</span>
       <span>Local-first EEG, MEG, and MRI processing · MIT licensed</span>
-      <nav>
+      <nav aria-label="Footer">
         <a href="https://github.com/hieudoanm/neuro.lab" target="_blank" rel="noreferrer">GitHub</a>
         <a href="https://github.com/hieudoanm/neuro.lab#readme" target="_blank" rel="noreferrer">README</a>
-        <a href="https://github.com/hieudoanm/neuro.lab/tree/master/crates" target="_blank" rel="noreferrer">Crates</a>
       </nav>
     </div>
   </footer>
-
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
