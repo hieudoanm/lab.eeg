@@ -1,0 +1,35 @@
+[package]
+name = "neuro-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "neuro"
+path = "src/main.rs"
+
+[dependencies]
+neuro-core = { path = "../neuro-core" }
+neuro-eeg = { path = "../neuro-eeg" }
+neuro-meg = { path = "../neuro-meg" }
+neuro-mri = { path = "../neuro-mri" }
+serde.workspace = true
+serde_json.workspace = true
+clap = { version = "=4.5.41", features = ["derive"] }
+
+# Newer clippy (rust 1.99) flags pre-existing style patterns; keep -D warnings green.
+[lints.clippy]
+needless_range_loop = "allow"
+too_many_arguments = "allow"
+type_complexity = "allow"
+manual_is_multiple_of = "allow"
+chunks_exact_to_as_chunks = "allow"
+neg_cmp_op_on_partial_ord = "allow"
+unnecessary_sort_by = "allow"
+manual_range_contains = "allow"
+useless_conversion = "allow"
+needless_lifetimes = "allow"
+unnecessary_cast = "allow"
+manual_checked_ops = "allow"
+format_in_format_args = "allow"
+ptr_arg = "allow"

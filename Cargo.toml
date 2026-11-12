@@ -5,6 +5,7 @@ members = [
   "crates/neuro-meg",
   "crates/neuro-mri",
   "crates/neuro-store",
+  "crates/neuro-cli",
   "packages/desktop/src-tauri",
 ]
 resolver = "2"

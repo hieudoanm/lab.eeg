@@ -114,7 +114,7 @@ pub fn validate_npy_file(
     max_samples: usize,
 ) -> Result<NpyMetadata, CoreError> {
     let bytes = std::fs::read(path)?;
-    let parsed = parse_npy_v1(&bytes)?;
+    let mut parsed = parse_npy_v1(&bytes)?;
     if parsed.shape.0 == 0 || parsed.shape.1 == 0 {
         return Err(CoreError::InvalidInput(
             "recording must contain channels and samples".into(),
@@ -124,6 +124,16 @@ pub fn validate_npy_file(
         return Err(CoreError::InvalidInput(
             "recording exceeds configured limits".into(),
         ));
+    }
+    if parsed.sampling_frequency_hz <= 0.0 || !parsed.sampling_frequency_hz.is_finite() {
+        // NPY has no standard rate field; fall back to the sidecar manifest.
+        if let Some(rate) = channel_manifest(path)
+            .sampling_frequency_hz
+            .filter(|value| *value > 0.0 && value.is_finite())
+        {
+            parsed.sampling_frequency_hz = rate;
+            parsed.duration_seconds = parsed.shape.1 as f64 / rate;
+        }
     }
     if parsed.sampling_frequency_hz <= 0.0 || !parsed.sampling_frequency_hz.is_finite() {
         return Err(CoreError::InvalidInput(
@@ -150,12 +160,18 @@ pub fn describe_npy(
             "recording exceeds configured limits".into(),
         ));
     }
+    let manifest = channel_manifest(path);
+    // The sidecar manifest carries the true rate for NPY files; the caller's
+    // value is only a fallback when no manifest exists.
+    let sampling_frequency_hz = manifest
+        .sampling_frequency_hz
+        .filter(|value| *value > 0.0 && value.is_finite())
+        .unwrap_or(sampling_frequency_hz);
     if sampling_frequency_hz <= 0.0 || !sampling_frequency_hz.is_finite() {
         return Err(CoreError::InvalidInput(
             "sampling frequency must be positive".into(),
         ));
     }
-    let manifest = channel_manifest(path);
     let mut channel_names = manifest.channel_names;
     if channel_names.is_empty() {
         channel_names = default_channel_names(shape.0);

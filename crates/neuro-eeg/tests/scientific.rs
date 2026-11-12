@@ -140,3 +140,27 @@ fn signal_window_enforces_bounds_and_units() {
 
     std::fs::remove_dir_all(&dir).ok();
 }
+
+#[test]
+fn npy_manifest_supplies_sampling_rate() {
+    let dir = std::env::temp_dir().join(format!(
+        "neuro-eeg-manifest-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    let result = neuro_eeg::write_synthetic_recording(&dir, "m", 2, 500, 500.0, 9).unwrap();
+    let path = std::path::PathBuf::from(result["path"].as_str().unwrap());
+
+    // The .npy header carries no rate; the <name>.json manifest does.
+    // A wrong caller fallback must not override the manifest value.
+    let validated = neuro_eeg::validate_npy_file(&path, 512, 100_000).unwrap();
+    assert_eq!(validated.sampling_frequency_hz, 500.0);
+    let described = neuro_eeg::describe_npy(&path, 512, 100_000, 1.0).unwrap();
+    assert_eq!(described.sampling_frequency_hz, 500.0);
+    assert_eq!(described.duration_seconds, 1.0);
+
+    std::fs::remove_dir_all(&dir).ok();
+}

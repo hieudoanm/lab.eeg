@@ -1384,53 +1384,7 @@ pub struct GenerateMegSampleRequest {
 
 #[tauri::command]
 pub fn validate_meg_file_set(path: String) -> Result<serde_json::Value, String> {
-    let dir = PathBuf::from(path);
-    let names: Vec<String> = std::fs::read_dir(&dir)
-        .map_err(|error| error.to_string())?
-        .filter_map(Result::ok)
-        .filter_map(|entry| entry.file_name().to_str().map(str::to_string))
-        .collect();
-    let format = neuro_meg::formats::detect_format(&names)
-        .ok_or_else(|| "could not detect a supported MEG format".to_string())?;
-    // Map filenames to coarse roles for validation.
-    let role_for = |name: &str| -> &'static str {
-        let lower = name.to_lowercase();
-        if lower.contains("header") || lower.contains("dataset_description") {
-            "header"
-        } else if lower.ends_with(".fif")
-            || lower.ends_with(".bin")
-            || lower.ends_with(".sqd")
-            || lower.ends_with(".con")
-        {
-            "recording"
-        } else if lower.contains("event") {
-            "events"
-        } else if lower.contains("coord") {
-            "coordsystem"
-        } else if lower.contains("calib") {
-            "calibration"
-        } else if lower.contains("crosstalk") {
-            "crosstalk"
-        } else {
-            "companion"
-        }
-    };
-    let files: Vec<neuro_meg::formats::FileDeclaration> = names
-        .iter()
-        .map(|name| neuro_meg::formats::FileDeclaration {
-            name: name.clone(),
-            role: role_for(name).to_string(),
-            size_bytes: std::fs::metadata(dir.join(name))
-                .map(|m| m.len())
-                .unwrap_or(0),
-        })
-        .collect();
-    let findings = neuro_meg::formats::validate_file_set(format, &files);
-    Ok(serde_json::json!({
-        "format": format,
-        "findings": findings,
-        "supported_formats": neuro_meg::formats::supported_formats(),
-    }))
+    neuro_meg::validate_file_set(&PathBuf::from(path)).map_err(|error| error.to_string())
 }
 
 #[tauri::command]

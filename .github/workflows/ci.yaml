@@ -15,8 +15,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  rust:
-    name: Rust
+  cli-check:
+    name: CLI check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,6 +44,32 @@ jobs:
 
       - name: Test
         run: cargo test --workspace
+
+  cli-build:
+    name: CLI build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2.9.3
+
+      # neuro-cli only depends on the library crates — no webkit/gtk system
+      # libraries are needed, unlike the workspace-wide check job.
+      - name: Build neuro CLI
+        run: cargo build --release -p neuro-cli
+
+      - name: Upload CLI binary
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: neuro-cli-linux
+          path: target/release/neuro
+          if-no-files-found: error
+          retention-days: 7
 
   desktop-check:
     name: Desktop check

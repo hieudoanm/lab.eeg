@@ -749,3 +749,56 @@ pub fn band_power_summary(
     }
     result
 }
+
+/// Validate a MEG recording directory/file set: detects the format from the
+/// file names, assigns coarse roles, and returns findings plus the supported
+/// format list as JSON. Shared by the Tauri command and `neuro-cli`.
+pub fn validate_file_set(dir: &Path) -> Result<Value, CoreError> {
+    let names: Vec<String> = std::fs::read_dir(dir)
+        .map_err(|error| {
+            CoreError::InvalidInput(format!("cannot read {}: {error}", dir.display()))
+        })?
+        .filter_map(Result::ok)
+        .filter_map(|entry| entry.file_name().to_str().map(str::to_string))
+        .collect();
+    let format = formats::detect_format(&names)
+        .ok_or_else(|| CoreError::InvalidInput("could not detect a supported MEG format".into()))?;
+    let role_for = |name: &str| -> &'static str {
+        let lower = name.to_lowercase();
+        if lower.contains("header") || lower.contains("dataset_description") {
+            "header"
+        } else if lower.ends_with(".fif")
+            || lower.ends_with(".bin")
+            || lower.ends_with(".sqd")
+            || lower.ends_with(".con")
+        {
+            "recording"
+        } else if lower.contains("event") {
+            "events"
+        } else if lower.contains("coord") {
+            "coordsystem"
+        } else if lower.contains("calib") {
+            "calibration"
+        } else if lower.contains("crosstalk") {
+            "crosstalk"
+        } else {
+            "companion"
+        }
+    };
+    let files: Vec<formats::FileDeclaration> = names
+        .iter()
+        .map(|name| formats::FileDeclaration {
+            name: name.clone(),
+            role: role_for(name).to_string(),
+            size_bytes: std::fs::metadata(dir.join(name))
+                .map(|m| m.len())
+                .unwrap_or(0),
+        })
+        .collect();
+    let findings = formats::validate_file_set(format, &files);
+    Ok(serde_json::json!({
+        "format": format,
+        "findings": findings,
+        "supported_formats": formats::supported_formats(),
+    }))
+}
