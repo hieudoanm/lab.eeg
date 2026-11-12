@@ -15,7 +15,7 @@ neuro-meg = { path = "../neuro-meg" }
 neuro-mri = { path = "../neuro-mri" }
 serde.workspace = true
 serde_json.workspace = true
-clap = { version = "=4.5.41", features = ["derive"] }
+clap = { version = "=4.6.7", features = ["derive"] }
 
 # Newer clippy (rust 1.99) flags pre-existing style patterns; keep -D warnings green.
 [lints.clippy]
