@@ -7,9 +7,7 @@ Topics: `eeg`, `neuroimaging`, `meg`, `mri`, `tauri`, `rust`
 
 Neuro Lab is a local-first desktop workspace for EEG, MEG, and MRI research data. It has no server dependency: the React interface runs inside Tauri and calls typed Rust commands directly. All computation and persistence stay on the local filesystem.
 
-<p align="center">
-  <img src="assets/branding/png/og.png" alt="neuro.lab — a local-first desktop workspace for EEG, MEG, and MRI research data" width="720">
-</p>
+![neuro.lab — a local-first desktop workspace for EEG, MEG, and MRI research data](assets/branding/png/og.png)
 
 - Inspect, validate, and process EEG, MEG, and MRI recordings in one workspace.
 - Reproducible JSON pipeline chains for filtering, artifact rejection, epoching, and more.
@@ -19,12 +17,17 @@ Neuro Lab is a local-first desktop workspace for EEG, MEG, and MRI research data
 
 ## Table of Contents
 
-- [Features](#features)
-- [Repository layout](#repository-layout)
-- [Command line](#command-line)
-- [Get Started](#get-started)
-- [Landing site](#landing-site)
-- [License](#license)
+- [neuro.lab](#neurolab)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Repository layout](#repository-layout)
+  - [Command line](#command-line)
+  - [Get Started](#get-started)
+    - [Prerequisites](#prerequisites)
+    - [Desktop app](#desktop-app)
+    - [Checks](#checks)
+  - [Landing site](#landing-site)
+  - [License](#license)
 
 ## Features
 

@@ -6,7 +6,7 @@ assets at the root, no subdirectories.
 
 ## Layout
 
-```
+```text
 landing/
 ├── index.html    # Single-page markup: nav, hero, features, demo, how-it-works, install, CTA, footer
 ├── 404.html      # GitHub Pages 404 page, reuses styles.css
